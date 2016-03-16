@@ -4,11 +4,11 @@ body { height: 100%; font-family: Sketch-Match, verdana; background: #fafafa; fo
 #background_canvas { display: block; position: fixed; z-index: -1;}
 
 #main_header { display: block; max-width: 1024px; margin: auto;}
-	#main_header h1 { display: block; height: 128px; line-height: 128px; font-size: 112px;}
+	#main_header h1 { display: block; height: 128px; line-height: 128px; font-size: 128px;}
 	#main_header h2 { display: block; height: 32px; line-height: 32px; font-size: 32px;}
 
 #main_div { display: block; max-width: 1024px; margin: 64px auto 0px auto;}
-	#main_div span { display: block; width: 40px; height: 40px; line-height: 40px; margin: auto; font-size: 32px;}
+	#main_div input[type=number] { display: block; width: 100px; height: 40px; margin: auto; border: none; background: none; font-size: 32px; font-family: Sketch-Match; text-align: center;}
 	#main_div input[type=range] { display: block; width: 300px; margin: 8px auto 32px auto;}
 	#main_div a { display: block; width: 320px; height: 60px; line-height: 60px; margin: 52px auto 0px auto; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 32px; text-decoration: none; text-shadow: 0px 0px 2px #000;}
 	#main_div a:active { margin-top: 54px; border-bottom: 3px solid #32785f;}

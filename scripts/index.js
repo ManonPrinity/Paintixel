@@ -1,17 +1,17 @@
 var background_canvas = document.getElementById("background_canvas");
-var context = background_canvas.getContext('2d');
+var context = background_canvas.getContext("2d");
 
-var width_span = document.getElementById("width_span");
-var height_span = document.getElementById("height_span");
+var width_number = document.getElementById("width_number");
+var height_number = document.getElementById("height_number");
 
-var width_input = document.getElementById("width_input");
-var height_input = document.getElementById("height_input");
+var width_range = document.getElementById("width_range");
+var height_range = document.getElementById("height_range");
 
 function set_canvas_size()
 {
 	background_canvas.width = window.innerWidth;
 	background_canvas.height = window.innerHeight;
-	draw_canvas_grid(parseInt(width_span.innerHTML), parseInt(height_span.innerHTML));
+	draw_canvas_grid(parseInt(width_number.value), parseInt(height_number.value));
 }
 
 function draw_canvas_grid(step_x, step_y)
@@ -41,24 +41,36 @@ function draw_canvas_grid(step_x, step_y)
 	}
 }
 
-function update_size()
+function update_size(n)
 {
-	var size = width_input.value;
-	height_input.value = size;
-	width_span.innerHTML = size;
-	height_span.innerHTML = size;
-	draw_canvas_grid(parseInt(width_span.innerHTML), parseInt(height_span.innerHTML));
+	var size;
+
+	if (n == 1)
+		size = width_number.value;
+	else
+		size = width_range.value;
+	width_number.value = size;
+	width_range.value = size;
+	height_number.value = size;
+	height_range.value = size;
+	draw_canvas_grid(parseInt(width_number.value), parseInt(height_number.value));
 }
 
-function update_height()
+function update_height(n)
 {
-	var size = height_input.value;
-	height_span.innerHTML = size;
-	draw_canvas_grid(parseInt(width_span.innerHTML), parseInt(height_span.innerHTML));
+	var size;
+	
+	if (n == 1)
+		size = height_number.value;
+	else
+		size = height_range.value;
+	height_number.value = size;
+	height_range.value = size;
+	draw_canvas_grid(parseInt(width_number.value), parseInt(height_number.value));
 }
 
 function save_size()
 {
-	localStorage.setItem("tile_width", width_span.innerHTML);
-	localStorage.setItem("tile_height", height_span.innerHTML);
+	localStorage.setItem("tile_width", width_number.value);
+	localStorage.setItem("tile_height", height_number.value);
 }

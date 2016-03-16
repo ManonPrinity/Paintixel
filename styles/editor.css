@@ -1,0 +1,8 @@
+html { height: 100%; margin: 0px; padding: 0px;}
+body { height: 100%; margin: 0px; padding: 0px; font-family: Sketch-Match, Verdana; background: #222; font-size: 44px; color: #333; overflow: hidden;}
+
+header { display: block; position: absolute; height: 100px; background-color: #333; width: 100%; border-bottom: 2px solid #fff;}
+header h1 { text-align: center; color: white;}
+
+#canvas_handler { position: absolute; z-index: 1; left: 256px; overflow: auto;}
+	#main_canvas { display: block; position: absolute; z-index: 1; width: 40px; height: 40px; background-image: url(../img/canvas_bg.png); cursor: crosshair;}

@@ -1,0 +1,6 @@
+@font-face { font-family: Roboto-Regular; src: url("../fnt/Roboto-Regular.ttf");}
+@font-face { font-family: Sketch-Match; src: url("../fnt/Sketch-Match.ttf");}
+
+html, body { margin: 0px;}
+h1, h2, h3, h4, h5, h6 { margin: 0px; font-weight: normal;}
+p { margin: 0px;}

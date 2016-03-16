@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Paintixel</title>
+		<link rel="stylesheet" href="styles/style.css"/>
+		<link rel="stylesheet" href="styles/index.css"/>
+		<link rel="icon" type="img/png" href="img/favicon.png"/>
+	</head>
+ 
+	<body onload="set_canvas_size()" onresize="set_canvas_size()">
+		<canvas id="background_canvas"></canvas>
+		<header id="main_header">
+			<h1>My Paint.net</h1>
+			<h2>An easy way to create a Tile !</h2>
+		</header>
+
+		<div id="main_div">
+			<span id="width_span">10</span>
+			<input id="width_input" oninput="update_size()" type="range" min="10" max="500" value="10">
+			<span id="height_span">10</span>
+			<input id="height_input" oninput="update_height()" type="range" min="10" max="500" value="10">
+			<a onclick="save_size()" href="editor.html">Start Editing !</a>
+			<input id="join" type="button" value="Join a room"/>
+			<input id="create" type="button" value="Create a room"/>
+		</div>
+
+		<script type="text/javascript" src="scripts/index.js"></script>
+	</body>
+</html>

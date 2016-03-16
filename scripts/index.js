@@ -16,6 +16,8 @@ function set_canvas_size()
 
 function draw_canvas_grid(step_x, step_y)
 {
+	if (step_x < 1 || step_y < 1)
+		return ;
 	var x = step_x;
 	var y = step_y;
 	var w = background_canvas.width;

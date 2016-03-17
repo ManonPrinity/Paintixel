@@ -1,5 +1,5 @@
 html { height: 100%;}
-body { height: 100%; font-family: Roboto-Regular, Sketch-Match, verdana; background: #fafafa; font-size: 0px; color: #000; text-align: center;}
+body { height: 100%; font-family: Roboto-Regular, verdana; background: #fafafa; font-size: 0px; color: #000; text-align: center;}
 
 #background_canvas { display: block; position: fixed; z-index: -2;}
 

@@ -8,15 +8,122 @@
 		<link rel="icon" type="img/png" href="img/favicon.png"/>
 	</head>
  
-	<body onload="" onresize="">
+	<body onload="Ui.init()" onresize="Ui.resize()">
 
-		<header>
-			<h1>Paintixel</h1>
-		</header>
+		<aside id="left_aside">
+			<section id="project_view_section">
+				<h2>Project view<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<div class="zoom">
+					<p>Zoom :</p><input type="button" onclick="Ui_Project_View.set_zoom_value(-1)" value="-" /><span id="span_zoom_value">1</span><input type="button" onclick="Ui_Project_View.set_zoom_value(1)" value="+" />
+				</div>
+				<div class="grid">
+					<p>Grid :</p><input type="checkbox" id="grid_checkbox" onclick="Ui_Project_View.update_grid_checkbox(this.checked)"/>
+				</div>
+				<div class="rules">
+					<p>Rules :</p><input type="checkbox" id="rules_checkbox" onclick="Ui_Project_View.update_rules_checkbox(this.checked)"/>
+				</div>
+				<div class="background">
+					<p>Background :</p><input type="color" onchange="Ui_Project_View.set_background_project(this.value)" value="#222222" />
+				</div>
+			</section>
+			<section id="tools_section">
+				<h2>Tools<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'pen')" id="selected_tool"><img src="img/tools/pen.svg"/><span class="shortcut">P</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'pipette')"><img src="img/tools/pipette.svg"/><span class="shortcut">O</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'eraser')"><img src="img/tools/eraser.svg"/><span class="shortcut">E</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'bucket')"><img src="img/tools/bucket.svg"/><span class="shortcut">B</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'swaper')"><img src="img/tools/swaper.svg"/><span class="shortcut">S</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'lighten')"><img src="img/tools/lighten.svg"/><span class="shortcut">L</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'darken')"><img src="img/tools/darken.svg"/><span class="shortcut">D</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'stroke')"><img src="img/tools/stroke.svg"/><span class="shortcut">S</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'square')"><img src="img/tools/square.svg"/><span class="shortcut">L</span></div>
+				<div class="tool_handler" onclick="Ui_Tools.select_tool(this, 'circle')"><img src="img/tools/circle.svg"/><span class="shortcut">D</span></div>
+				<div class="tool" id="tool_option_pen">
+					<p>Pen size : </p><span id="pen_size_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_pen_size(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Pen opacity : </p><span id="pen_opacity_span">100%</span>
+					<input oninput="Ui_Tools.update_pen_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+				</div>
+				<div class="tool" id="tool_option_pipette">
+					<p>Pipette size : </p><span id="pipette_size_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_pipette_size(this.value)" type="range" min="1" max="8" value="1"/>
+					<p class="legend">With a size greater than 1, the pipette will select an average of the pixel colors selected.</p>
+				</div>
+				<div class="tool" id="tool_option_eraser">
+					<p>Eraser size : </p><span id="eraser_size_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_eraser_size(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Eraser opacity : </p><span id="eraser_opacity_span">100%</span>
+					<input oninput="Ui_Tools.update_eraser_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+					<p class="legend">With an opacity lower than 100, the eraser will fade the color to a partial transparency.</p>
+				</div>
+				<div class="tool" id="tool_option_bucket">
+					<p>Bucket tolerance : </p><span id="bucket_tolerance_span">0%</span>
+					<input oninput="Ui_Tools.update_bucket_tolerance(this.value)" type="range" min="0" max="100" value="0"/>
+					<p class="legend">More the tolerance is high, more this tool is leniant on the pixel colors to fill.</p>
+				</div>
+				<div class="tool" id="tool_option_swaper">
+					<p>Swaper tolerance : </p><span id="swaper_tolerance_span">0%</span>
+					<input oninput="Ui_Tools.update_swaper_tolerance(this.value)" type="range" min="0" max="100" value="0"/>
+					<p class="legend">More the tolerance is high, more this tool is leniant on the pixel colors to fill.</p>
+				</div>
+				<div class="tool" id="tool_option_lighten">
+					<p>Lighten size : </p><span id="lighten_size_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_lighten_size(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Lighten power : </p><span id="lighten_power_span">10%</span>
+					<input oninput="Ui_Tools.update_lighten_power(this.value)" type="range" min="0" max="100" value="10"/>
+					<p class="legend">More the power is high, more this tool will lighten the pixel colors.</p>
+				</div>
+				<div class="tool" id="tool_option_darken">
+					<p>Darken size : </p><span id="darken_size_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_darken_size(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Darken power : </p><span id="darken_power_span">10%</span>
+					<input oninput="Ui_Tools.update_darken_power(this.value)" type="range" min="0" max="100" value="10"/>
+					<p class="legend">More the power is high, more this tool will darken the pixel colors.</p>
+				</div>
+				<div class="tool" id="tool_option_stroke">
+					<p>Stroke width : </p><span id="stroke_width_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_stroke_width(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Stroke opacity : </p><span id="stroke_opacity_span">100%</span>
+					<input oninput="Ui_Tools.update_stroke_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+				</div>
+				<div class="tool" id="tool_option_square">
+					<p>Square width : </p><span id="square_width_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_square_width(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Square opacity : </p><span id="square_opacity_span">100%</span>
+					<input oninput="Ui_Tools.update_square_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+				</div>
+				<div class="tool" id="tool_option_circle">
+					<p>Circle width : </p><span id="circle_width_span">1 pixel</span>
+					<input oninput="Ui_Tools.update_circle_width(this.value)" type="range" min="1" max="8" value="1"/>
+					<p>Circle opacity : </p><span id="circle_opacity_span">100%</span>
+					<input oninput="Ui_Tools.update_circle_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+				</div>
+			</section>
+			<section id="palettes_section">
+				<h2>Palettes<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<div id="palette" class="colors">
+				</div>
+				<div class="selected">
+					<div id="left_color_preview" class="input_handler"><input id="left_color_input" type="color" value="#000000" onchange="Ui_Palette.set_left_color(this.value);"/></div>
+					<div id="right_color_preview" class="input_handler"><input id="right_color_input" type="color" value="#ffffff" onchange="Ui_Palette.set_right_color(this.value);"/></div>
+					<span id="left_color_span"></span>
+					<span id="right_color_span"></span>
+				</div>
+			</section>
+		</aside>
 
 		<div id="canvas_handler">
-			<canvas id="main_canvas" width="40" height="40"></canvas>
+			<canvas id="main_canvas"></canvas>
 		</div>
-		<!--<script type="text/javascript" src="scripts/index.js"></script>-->
+
+		<aside id="right_aside">
+			
+		</aside>
+
+		<script type="text/javascript" src="scripts/ui_project_view.js"></script>
+		<script type="text/javascript" src="scripts/ui_tools.js"></script>
+		<script type="text/javascript" src="scripts/ui_palette.js"></script>
+		<script type="text/javascript" src="scripts/ui_canvas.js"></script>
+		<script type="text/javascript" src="scripts/ui.js"></script>
 	</body>
 </html>

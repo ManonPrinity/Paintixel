@@ -1,8 +1,49 @@
-html { height: 100%; margin: 0px; padding: 0px;}
-body { height: 100%; margin: 0px; padding: 0px; font-family: Sketch-Match, Verdana; background: #222; font-size: 44px; color: #333; overflow: hidden;}
+html { height: 100%;}
+body { height: 100%; font-family: Roboto-Regular, verdana; background: #333; font-size: 0px; color: #333;}
 
-header { display: block; position: absolute; height: 100px; background-color: #333; width: 100%; border-bottom: 2px solid #fff;}
-header h1 { text-align: center; color: white;}
-
-#canvas_handler { position: absolute; z-index: 1; left: 256px; overflow: auto;}
+#canvas_handler { display: inline-block; vertical-align: top; position: absolute; left: 256px; z-index: 2; width: calc(100% - 512px); height: 100%;}
 	#main_canvas { display: block; position: absolute; z-index: 1; width: 40px; height: 40px; background-image: url(../img/canvas_bg.png); cursor: crosshair;}
+
+#left_aside { display: inline-block; vertical-align: top; position: absolute; left: 0px; z-index: 2; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
+#right_aside { display: inline-block; vertical-align: top; position: absolute; right: 0px; z-index: 2; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
+	#left_aside section, #right_aside section { display: block; overflow: hidden;}
+	#left_aside section h2, #right_aside section h2 { display: block; height: 24px; line-height: 24px; padding-left: 8px; border-bottom: 1px solid #222; color: #eee; font-weight: normal; font-size: 14px; background: #333;}
+		#left_aside section h2 span, #right_aside section h2 span { display: inline-block; float: right; width: 24px; height: 24px; line-height: 24px; border-left: 1px solid #222; color: #eee; text-align: center; cursor: pointer;}
+
+#project_view_section {}
+	#project_view_section .zoom { width: 256px; margin-top: 8px; padding: 0px 16px;}
+		#project_view_section .zoom p { display: inline-block; vertical-align: top; width: 100px; height: 32px; line-height: 32px; margin: 0px; font-size: 14px;}
+		#project_view_section .zoom input { display: inline-block; vertical-align: top; width: 24px; height: 24px; margin: 4px 0px; border: 1px solid #ddd; background: #fafafa; font-size: 14px; cursor: pointer;}
+		#project_view_section .zoom span { display: inline-block; vertical-align: top; width: 50px; height: 32px; line-height: 32px; font-size: 14px; text-align: center;}
+	#project_view_section .grid { padding: 0px 16px;}
+		#project_view_section .grid p { display: inline-block; vertical-align: top; width: 100px; height: 32px; line-height: 32px; margin: 0px; font-size: 14px;}
+		#project_view_section .grid input { display: inline-block; vertical-align: top; height: 24px; cursor: pointer;}
+	#project_view_section .rules { padding: 0px 16px;}
+		#project_view_section .rules p { display: inline-block; vertical-align: top; width: 100px; height: 32px; line-height: 32px; margin: 0px; font-size: 14px;}
+		#project_view_section .rules input { display: inline-block; vertical-align: top; height: 24px; cursor: pointer;}
+	#project_view_section .background { margin-bottom: 8px; padding: 0px 16px;}
+		#project_view_section .background p { display: inline-block; vertical-align: top; width: 100px; height: 32px; line-height: 32px; margin: 0px; font-size: 14px;}
+		#project_view_section .background input { display: inline-block; vertical-align: top; width: 64px; height: 32px; padding: 0px; border: none; background: #fff; font-size: 14px; cursor: pointer;}
+
+#tools_section {}
+	#tools_section .tool_handler { display: inline-block; position: relative; width: 20%; height: 20%; cursor: pointer; overflow: hidden;}
+	#tools_section .tool_handler:hover { background: #eee;}
+	#tools_section .tool_handler#selected_tool { box-shadow: 0px 0px 2px #777 inset; background: #ddd;}
+		#tools_section .tool_handler img { display: block; width: 64%; margin: 18%;}
+		#tools_section .tool_handler:hover span { display: block; position: absolute; bottom: 0px; right: 0px; width: 16px; height: 16px; line-height: 16px; font-size: 12px; background: #fff; box-shadow: 0px 0px 2px #777; text-align: center;}
+	#tools_section .tool { display: none; padding-bottom: 8px;}
+		#tools_section .tool p { display: inline-block; vertical-align: top; width: 128px; height: 32px; line-height: 32px; margin: 0px; margin-left: 16px; font-size: 14px;}
+		#tools_section .tool span { display: inline-block; vertical-align: top; height: 32px; line-height: 32px; font-size: 14px;}
+		#tools_section .tool input { display: block; width: 84%; margin: 0% 8%; padding: 0px;}
+		#tools_section .tool .legend { width: auto; height: auto; line-height: 16px; margin: 0px 16px; font-size: 12px; color: #777; font-style: italic;}
+	#tool_option_pen { display: block}
+
+#palettes_section {}
+	#palettes_section .colors { border-bottom: 1px solid #aaa; background-image: url(../img/canvas_bg.png); cursor: pointer;}
+		#palettes_section .color { display: inline-block; vertical-align: top; width: 12.5%; height: 32px;}
+		#palettes_section .default_black { background: #000000;}
+		#palettes_section .default_white { background: #ffffff;}
+	#palettes_section .selected { display: block; padding: 8px; text-align: center;}
+		#palettes_section .selected .input_handler { display: inline-block; vertical-align: top; width: calc(50% - 18px); margin: 8px; border: 1px solid #333; background-image: url(../img/canvas_bg.png); cursor: pointer;}
+			#palettes_section .selected input { display: inline-block; vertical-align; top; width: 100%; height: 64px; margin: 0px; padding: 0px; border: none; opacity: 0; cursor: pointer;}
+		#palettes_section .selected span { display: inline-block; vertical-align; top; width: 50%; height: 32px; font-size: 12px;}

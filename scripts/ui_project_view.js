@@ -3,14 +3,57 @@ var Ui_Project_View =
 	zoom_value: 1,
 	grid: false,
 	rules: false,
+	informations: true,
+	informations_position: 0,
+
+	informations_div: document.getElementById("informations_div"),
+	informations_div_x: document.getElementById("informations_div_x"),
+	informations_div_y: document.getElementById("informations_div_y"),
+	informations_div_w: document.getElementById("informations_div_w"),
+	informations_div_h: document.getElementById("informations_div_h"),
 
 	init: function()
 	{
-		this.grid = document.getElementById("grid_checkbox").checked;
-		this.rules = document.getElementById("rules_checkbox").checked;
+		this.init_informations_div();
+
+		document.getElementById("grid_checkbox").checked = false;
+		document.getElementById("rules_checkbox").checked = false;
+		document.getElementById("informations_checkbox").checked = true;
 	},
 
-	set_zoom_value: function(val)
+	init_informations_div: function()
+	{
+		var w = localStorage.getItem("width");
+		var h = localStorage.getItem("height");
+
+		if (w)
+			informations_div_w.innerHTML = w;
+		else
+			informations_div_w.innerHTML = "100";
+
+		if (h)
+			informations_div_h.innerHTML = h;
+		else
+			informations_div_h.innerHTML = "100";
+	},
+
+	move_informations_div: function()
+	{
+		if (this.informations_position)
+		{
+			this.informations_div.style.top = "auto";
+			this.informations_div.style.bottom = "0";
+			this.informations_position = 0;
+		}
+		else
+		{
+			this.informations_div.style.top = "0";
+			this.informations_div.style.bottom = "auto";
+			this.informations_position = 1;
+		}
+	},
+
+	update_zoom_value: function(val)
 	{
 		if (val == -1 && this.zoom_value > 1)
 			document.getElementById("span_zoom_value").innerHTML = --this.zoom_value;
@@ -31,7 +74,17 @@ var Ui_Project_View =
 		this.rules = check;
 	},
 
-	set_background_project: function(color)
+	update_informations_checkbox: function(check)
+	{
+		this.informations = check;
+		if (check)
+			this.informations_div.style.display = "block";
+		else
+			this.informations_div.style.display = "none";
+
+	},
+
+	update_background_project: function(color)
 	{
 		document.body.style.background = color;
 		//document.getElementById("preview_canvas").style.background = color;

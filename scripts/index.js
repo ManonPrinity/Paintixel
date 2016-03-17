@@ -84,8 +84,8 @@ function update_height(n)
 
 function save_size()
 {
-	localStorage.setItem("tile_width", width_number.value);
-	localStorage.setItem("tile_height", height_number.value);
+	localStorage.setItem("width", width_number.value);
+	localStorage.setItem("height", height_number.value);
 }
 
 function join_room()

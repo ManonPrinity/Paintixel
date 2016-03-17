@@ -14,7 +14,7 @@
 			<section id="project_view_section">
 				<h2>Project view<span onclick="Ui.toggle_section(this)">-</span></h2>
 				<div class="zoom">
-					<p>Zoom :</p><input type="button" onclick="Ui_Project_View.set_zoom_value(-1)" value="-" /><span id="span_zoom_value">1</span><input type="button" onclick="Ui_Project_View.set_zoom_value(1)" value="+" />
+					<p>Zoom :</p><input type="button" onclick="Ui_Project_View.update_zoom_value(-1)" value="-" /><span id="span_zoom_value">1</span><input type="button" onclick="Ui_Project_View.update_zoom_value(1)" value="+" />
 				</div>
 				<div class="grid">
 					<p>Grid :</p><input type="checkbox" id="grid_checkbox" onclick="Ui_Project_View.update_grid_checkbox(this.checked)"/>
@@ -22,8 +22,11 @@
 				<div class="rules">
 					<p>Rules :</p><input type="checkbox" id="rules_checkbox" onclick="Ui_Project_View.update_rules_checkbox(this.checked)"/>
 				</div>
+				<div class="informations">
+					<p>Informations :</p><input type="checkbox" id="informations_checkbox" onclick="Ui_Project_View.update_informations_checkbox(this.checked)"/>
+				</div>
 				<div class="background">
-					<p>Background :</p><input type="color" onchange="Ui_Project_View.set_background_project(this.value)" value="#222222" />
+					<p>Background :</p><input type="color" onchange="Ui_Project_View.update_background_project(this.value)" value="#222222" />
 				</div>
 			</section>
 			<section id="tools_section">
@@ -116,8 +119,26 @@
 			<canvas id="main_canvas"></canvas>
 		</div>
 
+		<div id="informations_div" onclick="Ui_Project_View.move_informations_div()" title="Click to move !">
+			<span>x:</span>
+			<span id="informations_div_x">0</span>
+			<span>y:</span>
+			<span id="informations_div_y">0</span>
+			<span>width:</span>
+			<span id="informations_div_w">0</span>
+			<span>height:</span>
+			<span id="informations_div_h">0</span>
+		</div>
+
 		<aside id="right_aside">
-			
+			<section id="preview_section">
+				<h2>Preview<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<canvas id="preview_canvas" width="256" height="256"></canvas>
+			</section>
+			<section  id="layers_section">
+				<h2>Layers<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<p>Yo</p>
+			</section>
 		</aside>
 
 		<script type="text/javascript" src="scripts/ui_project_view.js"></script>

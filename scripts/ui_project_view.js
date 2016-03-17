@@ -27,14 +27,14 @@ var Ui_Project_View =
 		var h = localStorage.getItem("height");
 
 		if (w)
-			informations_div_w.innerHTML = w;
+			this.informations_div_w.innerHTML = w;
 		else
-			informations_div_w.innerHTML = "100";
+			this.informations_div_w.innerHTML = "100";
 
 		if (h)
-			informations_div_h.innerHTML = h;
+			this.informations_div_h.innerHTML = h;
 		else
-			informations_div_h.innerHTML = "100";
+			this.informations_div_h.innerHTML = "100";
 	},
 
 	move_informations_div: function()
@@ -60,7 +60,7 @@ var Ui_Project_View =
 		else if (val == 1 && this.zoom_value < 50)
 			document.getElementById("span_zoom_value").innerHTML = ++this.zoom_value;
 
-		//Canvas.update_drawing_size();
+		Ui_Canvas.update_size();
 		//Canvas.update_drawing_position();
 	},
 

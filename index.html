@@ -5,14 +5,15 @@
 		<title>Paintixel</title>
 		<link rel="stylesheet" href="styles/style.css"/>
 		<link rel="stylesheet" href="styles/index.css"/>
-		<link rel="icon" type="img/png" href="img/favicon.png"/>
+		<link rel="icon" type="img/png" href="img/favicon2.png"/>
 	</head>
  
-	<body onload="set_canvas_size()" onresize="set_canvas_size()">
+	<body onload="update_ui()" onresize="update_ui()">
 		<canvas id="background_canvas"></canvas>
+		<div id="background_opacity" onclick="hide_popups()"></div>
 		<header id="main_header">
-			<h1>Paintixel</h1>
-			<h2>An easy way to create a Tile !</h2>
+			<h1><span>P</span><span>a</span><span>i</span><span>n</span><span>t</span><span>i</span><span>x</span><span>e</span><span>l</span></h1>
+			<h2>An easy way to create a Pixel Art !</h2>
 		</header>
 
 		<div id="main_div">
@@ -21,9 +22,40 @@
 			<input id="height_number" oninput="update_height(1)" type="number" value="10"/>
 			<input id="height_range" oninput="update_height(2)" type="range" min="10" max="500" value="10"/>
 			<a onclick="save_size()" href="editor.html">Start Editing !</a>
-			<input id="join" type="button" value="Join a room"/>
-			<input id="create" type="button" value="Create a room"/>
+			<input id="join_button" type="button" value="Join a room" onclick="join_room()"/>
+			<input id="create_button" type="button" value="Create a room" onclick="create_room()"/>
 		</div>
+
+		<section id="join_room_section">
+			<header>
+				<h2>Choose your room</h2>
+				<span onclick="hide_popups()"></span>
+			</header>
+			<div id="rooms_list">
+				<article>
+					<span class="lock"></span>
+					<span class="title">La room de Paul</span>
+					<span class="users">1</span>
+					<span class="user"></span>
+					<span class="viewers">17</span>
+					<span class="eye"></span>
+					<span class="door"></span>
+				</article>
+				<article>
+					<span class="lock"></span>
+					<span class="title">Et celle de Manon</span>
+					<span class="users">3</span>
+					<span class="user"></span>
+					<span class="viewers">52</span>
+					<span class="eye"></span>
+					<span class="door"></span>
+				</article>
+			</div>
+		</section>
+
+		<section id="create_room_section">
+			
+		</section>
 
 		<script type="text/javascript" src="scripts/index.js"></script>
 	</body>

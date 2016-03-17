@@ -1,16 +1,46 @@
 html { height: 100%;}
-body { height: 100%; font-family: Sketch-Match, verdana; background: #fafafa; font-size: 0px; color: #333; text-align: center;}
+body { height: 100%; font-family: Roboto-Regular, Sketch-Match, verdana; background: #fafafa; font-size: 0px; color: #000; text-align: center;}
 
-#background_canvas { display: block; position: fixed; z-index: -1;}
+#background_canvas { display: block; position: fixed; z-index: -2;}
+
+#background_opacity { display: block; position: fixed; z-index: -1; width: 100%; height: 100%; background: #000; opacity: 0; transition: opacity 300ms ease;}
 
 #main_header { display: block; max-width: 1024px; margin: auto;}
-	#main_header h1 { display: block; height: 128px; line-height: 128px; font-size: 128px;}
-	#main_header h2 { display: block; height: 32px; line-height: 32px; font-size: 32px;}
+	#main_header h1 { display: block; height: 128px; line-height: 128px; font-size: 128px; font-family: Sketch-Match; animation: move_title 2s ease; animation-iteration-count: infinite;}
+		#main_header h1 span:nth-child(1) { color: #c55;}
+		#main_header h1 span:nth-child(2) { color: #55c;}
+		#main_header h1 span:nth-child(3) { color: #5c5;}
+		#main_header h1 span:nth-child(4) { color: #b3a502;}
+		#main_header h1 span:nth-child(5) { color: #980ae6;}
+		#main_header h1 span:nth-child(6) { color: #028cb3;}
+		#main_header h1 span:nth-child(7) { color: #b34802;}
+		#main_header h1 span:nth-child(8) { color: #4c4642;}
+		#main_header h1 span:nth-child(9) { color: #e55ae0;}
+	#main_header h2 { display: block; height: 42px; line-height: 42px; font-size: 42px; font-family: Sketch-Match;}
 
 #main_div { display: block; max-width: 1024px; margin: 64px auto 0px auto;}
-	#main_div input[type=number] { display: block; width: 100px; height: 40px; margin: auto; border: none; background: none; font-size: 32px; font-family: Sketch-Match; text-align: center;}
+	#main_div input[type=number] { display: block; width: 100px; height: 40px; margin: auto; border: none; background: none; font-size: 24px; color: #333; font-family: Roboto-Regular; text-align: center;}
 	#main_div input[type=range] { display: block; width: 300px; margin: 8px auto 32px auto;}
-	#main_div a { display: block; width: 320px; height: 60px; line-height: 60px; margin: 52px auto 0px auto; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 32px; text-decoration: none; text-shadow: 0px 0px 2px #000;}
+	#main_div a { display: block; width: 320px; height: 60px; line-height: 60px; margin: 52px auto 0px auto; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 24px; text-decoration: none; text-shadow: 0px 0px 2px #000;}
 	#main_div a:active { margin-top: 54px; border-bottom: 3px solid #32785f;}
-	#main_div input[type=button] { display: inline-block; vertical-align: top; width: 152px; height: 40px; margin-top: 16px; border: none; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 22px; font-family: Sketch-Match; text-shadow: 0px 0px 2px #000; cursor: pointer;}
-	#join { margin-right: 16px;}
+	#main_div input[type=button] { display: inline-block; vertical-align: top; width: 152px; height: 40px; margin-top: 16px; border: none; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 16px; font-family: Roboto-Regular; text-shadow: 0px 0px 2px #000; cursor: pointer;}
+	#join_button { margin-right: 16px;}
+
+#join_room_section { display: block; position: absolute; z-index: -1; top: 0; width: 512px; height: 700px; background: #fafafa; box-shadow: 0px 0px 4px #000; overflow: hidden; opacity: 0; transition: opacity 300ms ease;}
+	#join_room_section header { display: block; width: 100%; height: 49px; border-bottom: 1px solid #ccc; background-color: #eee;}
+		#join_room_section header h2 { display: inline-block; vertical-align: top; width: calc(100% - 42px); height: 49px; line-height: 49px; font-size: 42px; font-family: Sketch-Match;}
+		#join_room_section header span { display: inline-block; vertical-align: top; width: 41px; height: 49px; border-left: 1px solid #ccc; background-image: url("../img/icons/cross.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%; cursor: pointer; opacity: 0.5; transition: opacity 300ms ease;}
+		#join_room_section header span:hover { opacity: 0.8;}
+	#join_room_section div { display: block; height: 650px; overflow: auto;}
+		#join_room_section div article { display: block; height: 42px; border-bottom: 1px dashed #ddd; text-align: left;}
+		#join_room_section div article:hover { background-color: #eee;}
+			#join_room_section div article span { display: inline-block; vertical-align: top; height: 42px;}
+			#join_room_section div article .lock { width: 42px; background-image: url("../img/icons/lock.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%;}
+			#join_room_section div article .title { width: calc(100% - 252px); line-height: 42px; font-size: 14px; overflow: hidden; color: #333;}
+			#join_room_section div article .users { width: 42px; line-height: 42px; font-size: 14px; color: #333; text-align: right;}
+			#join_room_section div article .user { width: 42px; background-image: url("../img/icons/user.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%;}
+			#join_room_section div article .viewers { width: 42px; line-height: 42px; font-size: 14px; color: #333; text-align: right;}
+			#join_room_section div article .eye { width: 42px; background-image: url("../img/icons/eye.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%; cursor: pointer;}
+			#join_room_section div article .door { box-sizing: border-box; width: 42px; border-left: 1px dashed #ddd; background-image: url("../img/icons/door.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%; cursor: pointer;}
+
+@keyframes move_title { 0% { line-height: 128px;} 50% { line-height: 120px;} 100% { line-height: 128px;}}

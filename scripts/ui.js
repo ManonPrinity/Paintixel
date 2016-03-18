@@ -9,7 +9,8 @@ var Ui =
 	},
 	resize: function()
 	{
-
+		Ui_Canvas.update_size();
+		Ui_Canvas.init_canvas_position();
 	},
 	toggle_section: function(elem)
 	{

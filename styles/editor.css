@@ -9,8 +9,8 @@ body { height: 100%; font-family: Roboto-Regular, verdana; background: #222; fon
 	#informations_div span { display: inline-block; vertical-align: top; height: 24px; line-height: 24px; text-align: center; font-size: 12px;}
 	#informations_div_x, #informations_div_y, #informations_div_w { margin-right: 8px; padding-right: 8px; border-right: 1px solid #111;}
 
-#left_aside { display: inline-block; vertical-align: top; position: absolute; left: 0px; z-index: 2; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
-#right_aside { display: inline-block; vertical-align: top; position: absolute; right: 0px; z-index: 2; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
+#left_aside { display: inline-block; vertical-align: top; position: absolute; left: 0px; z-index: 3; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
+#right_aside { display: inline-block; vertical-align: top; position: absolute; right: 0px; z-index: 3; width: 256px; height: 100%; box-shadow: 0px 0px 4px #000; background: #eee; overflow: auto;}
 	#left_aside section, #right_aside section { display: block; overflow: hidden;}
 	#left_aside section h2, #right_aside section h2 { display: block; height: 24px; line-height: 24px; padding-left: 8px; border-bottom: 1px solid #222; color: #eee; font-weight: normal; font-size: 14px; background: #333;}
 		#left_aside section h2 span, #right_aside section h2 span { display: inline-block; float: right; width: 24px; height: 24px; line-height: 24px; border-left: 1px solid #222; color: #eee; text-align: center; cursor: pointer;}

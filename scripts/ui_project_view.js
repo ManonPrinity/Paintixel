@@ -61,7 +61,7 @@ var Ui_Project_View =
 			document.getElementById("span_zoom_value").innerHTML = ++this.zoom_value;
 
 		Ui_Canvas.update_size();
-		//Canvas.update_drawing_position();
+		Ui_Canvas.init_canvas_position();
 	},
 
 	update_grid_checkbox: function(check)

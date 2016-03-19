@@ -7,6 +7,7 @@ var Ui_Canvas =
 	{
 		this.init_size();
 		this.init_canvas_position();
+		this.init_events();
 	},
 
 	init_size: function()
@@ -46,6 +47,25 @@ var Ui_Canvas =
 		this.canvas.style.top = (this.canvas_handler.offsetHeight - this.canvas.offsetHeight) / 2 + "px";
 	},
 
+	init_events: function()
+	{
+		
+		if (document.addEventListener)
+		{
+			this.canvas_handler.addEventListener('DOMMouseScroll', this.canvas_scroll, false);
+			this.canvas_handler.addEventListener('mousewheel', this.canvas_scroll, false);
+		}
+		else if (document.attachEvent)
+		{
+			this.canvas_handler.attachEvent('onmousewheel', this.canvas_scroll);
+		}
+		else
+		{
+			this.canvas_handler.onDOMMouseScroll = this.canvas_scroll;
+			this.canvas_handler.onmousewheel = this.canvas_scroll;
+		}
+	},
+
 	update_size: function()
 	{
 		var w = parseInt(Ui_Project_View.informations_div_w.innerHTML);
@@ -75,5 +95,18 @@ var Ui_Canvas =
 			this.canvas.height = max_h;
 			this.canvas.style.height = max_h + "px";
 		}
+	},
+
+	canvas_scroll: function(event)
+	{
+		var e = event || window.event;
+		var delta = (- e.detail / 3) || (e.wheelDelta / 120);
+
+			Ui_Project_View.update_zoom_value(delta);
+
+		if (e.preventDefault)
+			e.preventDefault();
+		else
+			e.returnValue = false;
 	}
 }

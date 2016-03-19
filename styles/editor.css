@@ -2,7 +2,7 @@ html { height: 100%;}
 body { height: 100%; font-family: Roboto-Regular, verdana; background: #222; font-size: 0px; color: #333;}
 
 #canvas_handler { display: inline-block; vertical-align: top; position: absolute; left: 256px; z-index: 2; width: calc(100% - 512px); height: 100%;}
-	#main_canvas { display: block; position: absolute; z-index: 1; width: 100px; height: 100px; background-image: url(../img/canvas_bg.png); cursor: crosshair;}
+	#main_canvas { display: block; position: absolute; z-index: 1; width: 100px; height: 100px; background-image: url(../img/canvas_bg.png); cursor: url("../img/cursor.png");}
 
 #informations_div { display: block; position: absolute; z-index: 2; left: 50%; bottom: 0; height: 24px; margin-left: auto; margin-right: auto; padding: 0px 8px; box-shadow: 0px 0px 1px #000; background: #333; font-size: 0px; color: #eee; transform: translate(-50%, 0); cursor: pointer;}
 #informations_div:hover { box-shadow: 0px 0px 2px #000;}
@@ -48,7 +48,7 @@ body { height: 100%; font-family: Roboto-Regular, verdana; background: #222; fon
 
 #palettes_section {}
 	#palettes_section .colors { border-bottom: 1px solid #aaa; background-image: url(../img/canvas_bg.png); cursor: pointer;}
-		#palettes_section .color { display: inline-block; vertical-align: top; width: 12.5%; height: 32px;}
+		#palettes_section .color { display: inline-block; vertical-align: top; width: calc(12.5% - 1px); height: 31px; margin: -1px -1px 0px 0px; border: 1px solid #000;}
 		#palettes_section .default_black { background: #000000;}
 		#palettes_section .default_white { background: #ffffff;}
 	#palettes_section .selected { display: block; padding: 8px; text-align: center;}

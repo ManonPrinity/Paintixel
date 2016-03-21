@@ -1,100 +1,118 @@
 var Ui_Canvas =
 {
+	handler: document.getElementById("canvas_handler"),
+	handler_width: undefined,
+	handler_height: undefined,
 	canvas: document.getElementById("main_canvas"),
-	canvas_handler: document.getElementById("canvas_handler"),
+	canvas_width: 10,
+	canvas_height: 10,
+	canvas_current_width: undefined,
+	canvas_current_height: undefined,
+	canvas_zoomed_width: undefined,
+	canvas_zoomed_height: undefined,
+	gap_left: undefined,
+	gap_top: undefined,
 
 	init: function()
 	{
 		this.init_size();
-		this.init_canvas_position();
+		this.init_position();
 		this.init_events();
+		this.log_sizes();
 	},
 
 	init_size: function()
 	{
-		var w = parseInt(Ui_Project_View.informations_div_w.innerHTML);
-		var h = parseInt(Ui_Project_View.informations_div_h.innerHTML);
-		var max_w = parseInt(this.canvas_handler.offsetWidth);
-		var max_h = parseInt(this.canvas_handler.offsetHeight);
-		var z = parseInt(Ui_Project_View.zoom_value);
+		// Handler size
+		this.handler_width = this.handler.offsetWidth;
+		this.handler_height = this.handler.offsetHeight;
 
-		if (w * z < max_w)
-		{
-			this.canvas.width = w * z;
-			this.canvas.style.width = w * z + "px";
-		}
-		else
-		{
-			this.canvas.width = max_w;
-			this.canvas.style.width = max_w + "px";
-		}
+		// Canvas size
+		this.canvas_width = Storage.canvas_width;
+		this.canvas_height = Storage.canvas_height;
 
-		if (h * z < max_h)
-		{
-			this.canvas.height = h * z;
-			this.canvas.style.height = h * z + "px";
-		}
+		// Canvas zoomed size
+		this.canvas_zoomed_width = this.canvas_width * Ui_Project_View.zoom_value;
+		this.canvas_zoomed_height = this.canvas_height * Ui_Project_View.zoom_value;
+
+		if (this.canvas_zoomed_width < this.handler_width)
+			this.canvas_current_width = this.canvas_zoomed_width;
 		else
-		{
-			this.canvas.height = max_h;
-			this.canvas.style.height = max_h + "px";
-		}
+			this.canvas_current_width = this.handler_width;
+
+		if (this.canvas_zoomed_height < this.handler_height)
+			this.canvas_current_height = this.canvas_zoomed_height;
+		else
+			this.canvas_current_height = this.handler_height;
+
+		this.gap_left = (this.canvas_zoomed_width - this.handler_width) / 2;
+		this.gap_top = (this.canvas_zoomed_height - this.handler_height) / 2;
+
+		this.canvas.width = this.canvas_current_width;
+		this.canvas.height = this.canvas_current_height;
+
+		this.canvas.style.width = this.canvas_current_width + "px";
+		this.canvas.style.height = this.canvas_current_height + "px";
 	},
 
-	init_canvas_position: function()
+	init_position: function()
 	{
-		this.canvas.style.left = (this.canvas_handler.offsetWidth - this.canvas.offsetWidth) / 2 + "px";
-		this.canvas.style.top = (this.canvas_handler.offsetHeight - this.canvas.offsetHeight) / 2 + "px";
+		this.canvas.style.left = (this.handler_width - this.canvas_current_width) / 2 + "px";
+		this.canvas.style.top = (this.handler_height - this.canvas_current_height) / 2 + "px";
 	},
 
 	init_events: function()
 	{
-		
 		if (document.addEventListener)
 		{
-			this.canvas_handler.addEventListener('DOMMouseScroll', this.canvas_scroll, false);
-			this.canvas_handler.addEventListener('mousewheel', this.canvas_scroll, false);
+			this.handler.addEventListener('DOMMouseScroll', this.canvas_scroll, false);
+			this.handler.addEventListener('mousewheel', this.canvas_scroll, false);
 		}
 		else if (document.attachEvent)
 		{
-			this.canvas_handler.attachEvent('onmousewheel', this.canvas_scroll);
+			this.handler.attachEvent('onmousewheel', this.canvas_scroll);
 		}
 		else
 		{
-			this.canvas_handler.onDOMMouseScroll = this.canvas_scroll;
-			this.canvas_handler.onmousewheel = this.canvas_scroll;
+			this.handler.onDOMMouseScroll = this.canvas_scroll;
+			this.handler.onmousewheel = this.canvas_scroll;
 		}
 	},
 
 	update_size: function()
 	{
-		var w = parseInt(Ui_Project_View.informations_div_w.innerHTML);
-		var h = parseInt(Ui_Project_View.informations_div_h.innerHTML);
-		var max_w = parseInt(this.canvas_handler.offsetWidth);
-		var max_h = parseInt(this.canvas_handler.offsetHeight);
-		var z = parseInt(Ui_Project_View.zoom_value);
+		// Handler size
+		this.handler_width = this.handler.offsetWidth;
+		this.handler_height = this.handler.offsetHeight;
 
-		if (w * z < max_w)
-		{
-			this.canvas.width = w * z;
-			this.canvas.style.width = w * z + "px";
-		}
-		else
-		{
-			this.canvas.width = max_w;
-			this.canvas.style.width = max_w + "px";
-		}
+		// Canvas zoomed size
+		this.canvas_zoomed_width = this.canvas_width * Ui_Project_View.zoom_value;
+		this.canvas_zoomed_height = this.canvas_height * Ui_Project_View.zoom_value;
 
-		if (h * z < max_h)
-		{
-			this.canvas.height = h * z;
-			this.canvas.style.height = h * z + "px";
-		}
+		if (this.canvas_zoomed_width < this.handler_width)
+			this.canvas_current_width = this.canvas_zoomed_width;
 		else
-		{
-			this.canvas.height = max_h;
-			this.canvas.style.height = max_h + "px";
-		}
+			this.canvas_current_width = this.handler_width;
+
+		if (this.canvas_zoomed_height < this.handler_height)
+			this.canvas_current_height = this.canvas_zoomed_height;
+		else
+			this.canvas_current_height = this.handler_height;
+
+		this.gap_left = (this.canvas_zoomed_width - this.handler_width) / 2;
+		this.gap_top = (this.canvas_zoomed_height - this.handler_height) / 2;
+
+		this.canvas.width = this.canvas_current_width;
+		this.canvas.height = this.canvas_current_height;
+
+		this.canvas.style.width = this.canvas_current_width + "px";
+		this.canvas.style.height = this.canvas_current_height + "px";
+	},
+
+	update_position: function()
+	{
+		this.canvas.style.left = (this.handler_width - this.canvas_current_width) / 2 + "px";
+		this.canvas.style.top = (this.handler_height - this.canvas_current_height) / 2 + "px";
 	},
 
 	canvas_scroll: function(event)
@@ -102,11 +120,29 @@ var Ui_Canvas =
 		var e = event || window.event;
 		var delta = (- e.detail / 3) || (e.wheelDelta / 120);
 
-			Ui_Project_View.update_zoom_value(delta);
+		Ui_Project_View.update_zoom_value(delta);
+		Ui_Canvas.update_size();
+		Ui_Canvas.update_position();
+		Ui_Canvas.log_sizes();
 
 		if (e.preventDefault)
 			e.preventDefault();
 		else
 			e.returnValue = false;
+	},
+
+	log_sizes: function()
+	{
+		console.log("--------------------");
+		console.log("handler_width: " + this.handler_width);
+		console.log("handler_height: " + this.handler_height);
+		console.log("canvas_width: " + this.canvas_width);
+		console.log("canvas_height: " + this.canvas_height);
+		console.log("canvas_current_width: " + this.canvas_current_width);
+		console.log("canvas_current_height: " + this.canvas_current_height);
+		console.log("canvas_zoomed_width: " + this.canvas_zoomed_width);
+		console.log("canvas_zoomed_height: " + this.canvas_zoomed_height);
+		console.log("gap_left: " + this.gap_left);
+		console.log("gap_top: " + this.gap_top);
 	}
 }

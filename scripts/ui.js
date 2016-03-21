@@ -5,12 +5,13 @@ var Ui =
 		Ui_Project_View.init();
 		Ui_Tools.init();
 		Ui_Palette.init();
+		Ui_Preview.init();
 		Ui_Canvas.init();
 	},
 	resize: function()
 	{
 		Ui_Canvas.update_size();
-		Ui_Canvas.init_canvas_position();
+		Ui_Canvas.update_position();
 	},
 	toggle_section: function(elem)
 	{

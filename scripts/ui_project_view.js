@@ -23,18 +23,8 @@ var Ui_Project_View =
 
 	init_informations_div: function()
 	{
-		var w = localStorage.getItem("width");
-		var h = localStorage.getItem("height");
-
-		if (w)
-			this.informations_div_w.innerHTML = w;
-		else
-			this.informations_div_w.innerHTML = "100";
-
-		if (h)
-			this.informations_div_h.innerHTML = h;
-		else
-			this.informations_div_h.innerHTML = "100";
+			this.informations_div_w.innerHTML = Storage.canvas_width;
+			this.informations_div_h.innerHTML = Storage.canvas_height;
 	},
 
 	move_informations_div: function()
@@ -53,15 +43,22 @@ var Ui_Project_View =
 		}
 	},
 
+	update_x: function(x)
+	{
+		informations_div_x.innerHTML = x;
+	},
+
+	update_y: function(y)
+	{
+		informations_div_y.innerHTML = y;
+	},
+
 	update_zoom_value: function(val)
 	{
 		if (val == -1 && this.zoom_value > 1)
 			document.getElementById("span_zoom_value").innerHTML = --this.zoom_value;
 		else if (val == 1 && this.zoom_value < 50)
 			document.getElementById("span_zoom_value").innerHTML = ++this.zoom_value;
-
-		Ui_Canvas.update_size();
-		Ui_Canvas.init_canvas_position();
 	},
 
 	update_grid_checkbox: function(check)
@@ -87,6 +84,10 @@ var Ui_Project_View =
 	update_background_project: function(color)
 	{
 		document.body.style.background = color;
-		//document.getElementById("preview_canvas").style.background = color;
+	},
+
+	update_cursor_info: function(e)
+	{
+		alert("e");
 	}
 }

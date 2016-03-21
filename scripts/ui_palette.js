@@ -66,7 +66,7 @@ var Ui_Palette =
 			Ui_Palette.left_color_preview.style.background = Ui_Palette.selected_colors[0];
 			Ui_Palette.left_color_span.innerHTML = Ui_Palette.selected_colors[0];
 		}
-		new_color.oncontextmenu = function()
+		new_color.oncontextmenu = function(e)
 		{
 			Ui_Palette.selected_colors[1] = color;
 			Ui_Palette.selected_colors_rgb[3] = parseInt(color.substr(1, 2), 16);

@@ -8,7 +8,7 @@
 		<link rel="icon" type="img/png" href="img/favicon.png"/>
 	</head>
  
-	<body onload="Ui.init()" onresize="Ui.resize()">
+	<body onload="Ui.init(); Canvas.init();" onresize="Ui.resize();">
 
 		<aside id="left_aside">
 			<section id="project_view_section">
@@ -116,7 +116,7 @@
 		</aside>
 
 		<div id="canvas_handler">
-			<canvas id="main_canvas" onmousewheel="alert('a');"></canvas>
+			<canvas id="main_canvas" onclick=""></canvas>
 		</div>
 
 		<div id="informations_div" onclick="Ui_Project_View.move_informations_div()" title="Click to move !">
@@ -141,10 +141,13 @@
 			</section>
 		</aside>
 
+		<script type="text/javascript" src="scripts/storage.js"></script>
 		<script type="text/javascript" src="scripts/ui_project_view.js"></script>
 		<script type="text/javascript" src="scripts/ui_tools.js"></script>
 		<script type="text/javascript" src="scripts/ui_palette.js"></script>
+		<script type="text/javascript" src="scripts/ui_preview.js"></script>
 		<script type="text/javascript" src="scripts/ui_canvas.js"></script>
 		<script type="text/javascript" src="scripts/ui.js"></script>
+		<script type="text/javascript" src="scripts/canvas.js"></script>
 	</body>
 </html>

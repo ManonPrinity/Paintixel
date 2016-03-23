@@ -21,6 +21,7 @@ var Ui_Canvas =
 		this.log_sizes();
 	},
 
+	// Initialise les variables des tailles du handler, du canvas et des gaps
 	init_size: function()
 	{
 		// Handler size
@@ -55,12 +56,14 @@ var Ui_Canvas =
 		this.canvas.style.height = this.canvas_current_height + "px";
 	},
 
+	// Positionne le canvas
 	init_position: function()
 	{
 		this.canvas.style.left = (this.handler_width - this.canvas_current_width) / 2 + "px";
 		this.canvas.style.top = (this.handler_height - this.canvas_current_height) / 2 + "px";
 	},
 
+	// Initialise les evenements sur le canvas (scroll)
 	init_events: function()
 	{
 		if (document.addEventListener)
@@ -115,15 +118,13 @@ var Ui_Canvas =
 		this.canvas.style.top = (this.handler_height - this.canvas_current_height) / 2 + "px";
 	},
 
+	// Fonction appelee au scroll
 	canvas_scroll: function(event)
 	{
 		var e = event || window.event;
 		var delta = (- e.detail / 3) || (e.wheelDelta / 120);
 
 		Ui_Project_View.update_zoom_value(delta);
-		Ui_Canvas.update_size();
-		Ui_Canvas.update_position();
-		Ui_Canvas.log_sizes();
 
 		if (e.preventDefault)
 			e.preventDefault();

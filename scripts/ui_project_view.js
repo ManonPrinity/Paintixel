@@ -59,6 +59,10 @@ var Ui_Project_View =
 			document.getElementById("span_zoom_value").innerHTML = --this.zoom_value;
 		else if (val == 1 && this.zoom_value < 50)
 			document.getElementById("span_zoom_value").innerHTML = ++this.zoom_value;
+		Ui_Canvas.update_size();
+		Ui_Canvas.update_position();
+		Canvas.add_layer_to_canvas();
+		Ui_Canvas.log_sizes();
 	},
 
 	update_grid_checkbox: function(check)

@@ -52,6 +52,30 @@ var Ui_Palette =
 		this.add_color(color);
 	},
 
+	select_left_color: function(r, g, b)
+	{
+		var hex_color = "#" + r.toString(16) + g.toString(16) + b.toString(16);
+
+		this.selected_colors[0] = hex_color;
+		this.selected_colors_rgb[0] = r;
+		this.selected_colors_rgb[1] = g;
+		this.selected_colors_rgb[2] = b;
+		this.left_color_preview.style.background = hex_color;
+		this.left_color_span.innerHTML = hex_color;
+	},
+
+	select_right_color: function(r, g, b)
+	{
+		var hex_color = "#" + r.toString(16) + g.toString(16) + b.toString(16);
+
+		this.selected_colors[1] = hex_color;
+		this.selected_colors_rgb[3] = r;
+		this.selected_colors_rgb[4] = g;
+		this.selected_colors_rgb[5] = b;
+		this.right_color_preview.style.background = hex_color;
+		this.right_color_span.innerHTML = hex_color;
+	},
+
 	add_color: function(color)
 	{
 		var new_color = document.createElement("span");

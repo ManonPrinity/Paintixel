@@ -58,3 +58,19 @@ body { height: 100%; font-family: Roboto-Regular, verdana; background: #222; fon
 
 #preview_section {}
 	#preview_section canvas { background: #222;}
+
+#layers_section {}
+	#add_layer { display: block; box-sizing: border-box; width: 100%; height: 50px; line-height: 50px; border-bottom: 1px solid #aaa; text-align: center; font-size: 14px; cursor: pointer;}
+	#add_layer:hover { background: #ddd;}
+	#layers_handler { display: block; max-height: 250px; overflow: auto;}
+		#layers_handler .layer { display: block; box-sizing: border-box; width: 100%; height: 50px; line-height: 50px; border-bottom: 1px solid #ccc; cursor: pointer;}
+		#layers_handler .layer:last-child { border-bottom: 1px solid #aaa;}
+			#layers_handler .layer span { display: inline-block; vertical-align: top; width: 50px; height: 50px;}
+			#layers_handler .layer span.visible { background-image: url("../img/icons/visible.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%;}
+			#layers_handler .layer span.invisible { background-image: url("../img/icons/invisible.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%;}
+			#layers_handler .layer p { display: inline-block; vertical-align: top; box-sizing: border-box; width: calc(100% - 50px); height: 50px; line-height: 50px; padding-left: 10px; border-left: 1px solid #ccc; font-size: 14px; overflow: hidden;}
+			#selected_layer p { color: #32785f;}
+			#layers_handler .layer input { display: none; vertical-align: top; box-sizing: border-box; width: calc(100% - 50px); height: 49px; padding: 0px 0px 0px 10px; border: none; border-left: 1px solid #ccc; color: #333; font-size: 14px; overflow: hidden;}
+	#layers_actions { display: block; width: 100%; height: 25px; border-bottom: 1px solid #aaa;}
+		#layers_actions span { display: inline-block; vertical-align: top; box-sizing: border-box; width: 25%; height: 25px; line-height: 25px; border-left: 1px solid #ccc; font-size: 12px; text-align: center; cursor: pointer;}
+		#layers_actions span:hover { background: #ddd;}

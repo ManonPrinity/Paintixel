@@ -162,11 +162,8 @@ var Canvas =
 		}
 		else if (e.which == 3)
 		{
-			if (this.right_click == false)
-			{
-				Canvas.layer_right_action(cursor_x, cursor_y);
-				this.right_click = true;
-			}
+			Canvas.layer_right_action(cursor_x, cursor_y);
+			this.right_click = true;
 		}
 	},
 

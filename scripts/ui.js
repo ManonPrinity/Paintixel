@@ -6,6 +6,7 @@ var Ui =
 		Ui_Tools.init();
 		Ui_Palette.init();
 		Ui_Preview.init();
+		Ui_Layers.init();
 		Ui_Canvas.init();
 	},
 	resize: function()

@@ -137,7 +137,14 @@
 			</section>
 			<section  id="layers_section">
 				<h2>Layers<span onclick="Ui.toggle_section(this)">-</span></h2>
-				<p>Yo</p>
+				<div id="add_layer" onclick="Ui_Layers.add_layer()">Add layer</div>
+				<div id="layers_handler"></div>
+				<div id="layers_actions">
+					<span onclick="Ui_Layers.move_layer_top();">Top</span>
+					<span onclick="Ui_Layers.move_layer_down();">Down</span>
+					<span onclick="Ui_Layers.rename_layer();">Rename</span>
+					<span onclick="Ui_Layers.delete_layer();">Delete</span>
+				</div>
 			</section>
 		</aside>
 
@@ -146,6 +153,7 @@
 		<script type="text/javascript" src="scripts/ui_tools.js"></script>
 		<script type="text/javascript" src="scripts/ui_palette.js"></script>
 		<script type="text/javascript" src="scripts/ui_preview.js"></script>
+		<script type="text/javascript" src="scripts/ui_layers.js"></script>
 		<script type="text/javascript" src="scripts/ui_canvas.js"></script>
 		<script type="text/javascript" src="scripts/ui.js"></script>
 		<script type="text/javascript" src="scripts/canvas.js"></script>

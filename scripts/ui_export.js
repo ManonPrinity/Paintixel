@@ -12,9 +12,12 @@ var Ui_Export =
 
 	export_png: function()
 	{
+		var w = Ui_Canvas.canvas_width * this.size_multiplier;
+		var h = Ui_Canvas.canvas_height * this.size_multiplier;
+
 		var export_canvas = document.createElement("canvas");
-		export_canvas.width = Ui_Canvas.canvas_width * this.size_multiplier;
-		export_canvas.height = Ui_Canvas.canvas_height * this.size_multiplier;
+		export_canvas.width = w;
+		export_canvas.height = h;
 
 		var export_ctx = export_canvas.getContext("2d");
 		var export_data = export_ctx.getImageData(0, 0, export_canvas.width, export_canvas.height);
@@ -25,7 +28,18 @@ var Ui_Export =
 
 		export_ctx.putImageData(export_data, 0, 0);
 
-		window.open(export_canvas.toDataURL('image/png'));
+		var composite_operation = export_ctx.globalCompositeOperation;
+		export_ctx.globalCompositeOperation = "destination-over";
+		export_ctx.fillStyle = "rgba(0, 0, 0, 0)";
+		export_ctx.fillRect(0, 0, w, h);
+
+		var image_data = export_canvas.toDataURL('image/png');
+
+		export_ctx.clearRect(0, 0, w, h);
+		export_ctx.putImageData(export_data, 0, 0);
+		export_ctx.globalCompositeOperation = composite_operation;
+
+		window.open(image_data);
 	},
 
 	add_pixel: function(x, y, data, color)

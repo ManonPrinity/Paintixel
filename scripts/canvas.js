@@ -52,6 +52,8 @@ var Canvas =
 
 	add_pixel_to_temp_layer: function(x, y, color)
 	{
+		if (x < 0 || x > Ui_Canvas.canvas_width - 1 || y < 0 || y > Ui_Canvas.canvas_height - 1)
+			return ;
 		this.temp_layer[x][y].r = color.r;
 		this.temp_layer[x][y].g = color.g;
 		this.temp_layer[x][y].b = color.b;
@@ -322,12 +324,14 @@ var Canvas =
 			{
 				Canvas.clear_temp_layer();
 
-				var r = 0;
-				if (x - Canvas.start_x > r) r = x - Canvas.start_x;
-				if (Canvas.start_x - x > r) r = Canvas.start_x - x;
-				if (y - Canvas.start_y > r) r = y - Canvas.start_y;
-				if (Canvas.start_y - y > r) r = Canvas.start_y - y;
-
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+				var dx = x2 - x1;
+				var dy = y2 - y1;
+				var r = Math.floor(Math.sqrt((dx * dx) + (dy * dy)));
 				var posx = 0;
 				var posy = r;
 				var d = r - 1;
@@ -481,12 +485,14 @@ var Canvas =
 			{
 				Canvas.clear_temp_layer();
 
-				var r = 0;
-				if (x - Canvas.start_x > r) r = x - Canvas.start_x;
-				if (Canvas.start_x - x > r) r = Canvas.start_x - x;
-				if (y - Canvas.start_y > r) r = y - Canvas.start_y;
-				if (Canvas.start_y - y > r) r = Canvas.start_y - y;
-
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+				var dx = x2 - x1;
+				var dy = y2 - y1;
+				var r = Math.floor(Math.sqrt((dx * dx) + (dy * dy)));
 				var posx = 0;
 				var posy = r;
 				var d = r - 1;

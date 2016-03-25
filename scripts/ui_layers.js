@@ -17,7 +17,6 @@ var Ui_Layers =
 
 		var new_layer = document.createElement("div");
 		new_layer.className = "layer";
-		new_layer.id = "layer_" + this.amount;
 
 		var new_span = document.createElement("span");
 		new_span.className = "visible";

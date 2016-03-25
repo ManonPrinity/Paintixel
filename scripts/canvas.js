@@ -9,6 +9,11 @@ var Canvas =
 	preview_data: undefined,
 
 	layer: undefined,
+	temp_layer: undefined,
+
+	shape: false,
+	start_x: undefined,
+	start_y: undefined,
 
 	left_click: false,
 	right_click: false,
@@ -22,11 +27,16 @@ var Canvas =
 		this.preview_data = this.preview_ctx.getImageData(0, 0, Ui_Preview.canvas_width, Ui_Preview.canvas_height);
 
 		this.layer = [];
+		this.temp_layer = [];
 		for (var x = 0; x < Ui_Canvas.canvas_width; ++x)
 		{
 			this.layer[x] = [];
+			this.temp_layer[x] = [];
 			for (var y = 0; y < Ui_Canvas.canvas_height; ++y)
+			{
 				this.layer[x][y] = {r: 0, g: 0, b: 0, a: 0};
+				this.temp_layer[x][y] = {r: 0, g: 0, b: 0, a: 0};
+			}
 		}
 
 		this.handle_events();
@@ -38,6 +48,14 @@ var Canvas =
 		this.layer[x][y].g = color.g;
 		this.layer[x][y].b = color.b;
 		this.layer[x][y].a = color.a;
+	},
+
+	add_pixel_to_temp_layer: function(x, y, color)
+	{
+		this.temp_layer[x][y].r = color.r;
+		this.temp_layer[x][y].g = color.g;
+		this.temp_layer[x][y].b = color.b;
+		this.temp_layer[x][y].a = color.a;
 	},
 
 	add_pixel_to_canvas: function(x, y, color)
@@ -94,7 +112,10 @@ var Canvas =
 		{
 			for (var y = 0; y < this.layer[x].length; ++y)
 			{
-				this.add_pixel_to_canvas(x, y, this.layer[x][y]);
+				if (this.temp_layer[x][y].a > 0)
+					this.add_pixel_to_canvas(x, y, this.temp_layer[x][y]);
+				else
+					this.add_pixel_to_canvas(x, y, this.layer[x][y]);
 			}
 		}
 		this.main_ctx.putImageData(this.main_data, 0, 0);
@@ -109,6 +130,21 @@ var Canvas =
 	{
 		this.main_ctx.clearRect(0, 0, Ui_Canvas.canvas_current_width, Ui_Canvas.canvas_current_height);
 		this.main_data = this.main_ctx.getImageData(0, 0, Ui_Canvas.canvas_current_width, Ui_Canvas.canvas_current_height);
+	},
+
+	clear_temp_layer: function()
+	{
+		for (var x = 0; x < this.temp_layer.length; ++x)
+			for (var y = 0; y < this.temp_layer[x].length; ++y)
+				this.temp_layer[x][y] = {r: 0, g: 0, b: 0, a: 0};
+	},
+
+	copy_temp_layer: function()
+	{
+		for (var x = 0; x < this.layer.length; ++x)
+			for (var y = 0; y < this.layer[x].length; ++y)
+				if (this.temp_layer[x][y].a > 0)
+					this.layer[x][y] = this.temp_layer[x][y];
 	},
 
 	bucket_recursive: function(x, y, color, selected_color)
@@ -173,12 +209,22 @@ var Canvas =
 			this.left_click = false;
 		else if (e.which == 3)
 			this.right_click = false;
+		if (Canvas.shape == true)
+		{
+			Canvas.shape = false;
+			Canvas.copy_temp_layer();
+		}
 	},
 
 	event_mouseout: function(e)
 	{
 		this.left_click = false;
 		this.right_click = false;
+		if (Canvas.shape == true)
+		{
+			Canvas.shape = false;
+			Canvas.copy_temp_layer();
+		}
 	},
 
 	layer_left_action: function(x, y)
@@ -234,6 +280,111 @@ var Canvas =
 			}
 			Canvas.render_canvas();
 		}
+		else if (Ui_Tools.active_tool == "stroke")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+
+				var a = (y2 - y1) / (x2 - x1);
+				var b = y1 - a * x1;
+				while (x1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, parseInt(a * x1 + b), color);
+					++x1;
+				}
+
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
+		}
+		else if (Ui_Tools.active_tool == "circle")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+
+				var r = 0;
+				if (x - Canvas.start_x > r) r = x - Canvas.start_x;
+				if (Canvas.start_x - x > r) r = Canvas.start_x - x;
+				if (y - Canvas.start_y > r) r = y - Canvas.start_y;
+				if (Canvas.start_y - y > r) r = Canvas.start_y - y;
+
+				var posx = 0;
+				var posy = r;
+				var d = r - 1;
+				while (posy >= posx)
+				{
+					Canvas.add_pixel_to_temp_layer(x + posx, y + posy, color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y + posx, color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y + posy, color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y + posx, color);
+					Canvas.add_pixel_to_temp_layer(x + posx, y - posy, color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y - posx, color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y - posy, color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y - posx, color);
+
+					if (d >= posx * 2) {d -= posx * 2 + 1; ++posx;}
+					else if (d < 2 * (r - posy)) {d += posy * 2 - 1; --posy;}
+					else {d += 2 * (posy - posx - 1); --posy; ++posx;}
+				}
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
+		}
+		else if (Ui_Tools.active_tool == "square")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+
+				var tx1 = x1;
+				while (tx1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(tx1, y1, color);
+					Canvas.add_pixel_to_temp_layer(tx1, y2, color);
+					++tx1;
+				}
+				while (y1 <= y2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, y1, color);
+					Canvas.add_pixel_to_temp_layer(x2, y1, color);
+					++y1;
+				}
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
+		}
 	},
 
 	layer_right_action: function(x, y)
@@ -287,6 +438,111 @@ var Canvas =
 				}
 			}
 			Canvas.render_canvas();
+		}
+		else if (Ui_Tools.active_tool == "stroke")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+
+				var a = (y2 - y1) / (x2 - x1);
+				var b = y1 - a * x1;
+				while (x1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, parseInt(a * x1 + b), color);
+					++x1;
+				}
+
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
+		}
+		else if (Ui_Tools.active_tool == "circle")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+
+				var r = 0;
+				if (x - Canvas.start_x > r) r = x - Canvas.start_x;
+				if (Canvas.start_x - x > r) r = Canvas.start_x - x;
+				if (y - Canvas.start_y > r) r = y - Canvas.start_y;
+				if (Canvas.start_y - y > r) r = Canvas.start_y - y;
+
+				var posx = 0;
+				var posy = r;
+				var d = r - 1;
+				while (posy >= posx)
+				{
+					Canvas.add_pixel_to_temp_layer(x + posx, y + posy, color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y + posx, color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y + posy, color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y + posx, color);
+					Canvas.add_pixel_to_temp_layer(x + posx, y - posy, color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y - posx, color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y - posy, color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y - posx, color);
+
+					if (d >= posx * 2) {d -= posx * 2 + 1; ++posx;}
+					else if (d < 2 * (r - posy)) {d += posy * 2 - 1; --posy;}
+					else {d += 2 * (posy - posx - 1); --posy; ++posx;}
+				}
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
+		}
+		else if (Ui_Tools.active_tool == "square")
+		{
+			if (Canvas.shape == false)
+			{
+				Canvas.start_x = x;
+				Canvas.start_y = y;
+				Canvas.shape = true;
+			}
+			else
+			{
+				Canvas.clear_temp_layer();
+				var x1, x2, y1, y2;
+				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
+				else {x1 = x; x2 = Canvas.start_x;}
+
+				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
+				else {y1 = y; y2 = Canvas.start_y;}
+
+				var tx1 = x1;
+				while (tx1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(tx1, y1, color);
+					Canvas.add_pixel_to_temp_layer(tx1, y2, color);
+					++tx1;
+				}
+				while (y1 <= y2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, y1, color);
+					Canvas.add_pixel_to_temp_layer(x2, y1, color);
+					++y1;
+				}
+				Canvas.add_layer_to_canvas();
+				Canvas.render_canvas();
+			}
 		}
 	}
 }

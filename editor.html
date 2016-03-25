@@ -146,6 +146,14 @@
 					<span onclick="Ui_Layers.delete_layer();">Delete</span>
 				</div>
 			</section>
+			<section id="export_section">
+				<h2>Export<span onclick="Ui.toggle_section(this)">-</span></h2>
+				<p class="export" onclick="Ui_Export.export_png();">Export PNG</p>
+				<div>
+					<p>Size multiplier :</p><input type="button" onclick="Ui_Export.update_size_multiplier(-1)" value="-"/><span id="span_size_multiplier">1</span><input type="button" onclick="Ui_Export.update_size_multiplier(1)" value="+"/>
+				</div>
+				<p class="legend">Your Pixel Art will be opened in a new tab. To save it, Right-click on the generated PNG and select Save Image As...</p>
+			</section>
 		</aside>
 
 		<script type="text/javascript" src="scripts/storage.js"></script>
@@ -154,6 +162,7 @@
 		<script type="text/javascript" src="scripts/ui_palette.js"></script>
 		<script type="text/javascript" src="scripts/ui_preview.js"></script>
 		<script type="text/javascript" src="scripts/ui_layers.js"></script>
+		<script type="text/javascript" src="scripts/ui_export.js"></script>
 		<script type="text/javascript" src="scripts/ui_canvas.js"></script>
 		<script type="text/javascript" src="scripts/ui.js"></script>
 		<script type="text/javascript" src="scripts/canvas.js"></script>

@@ -216,13 +216,13 @@ var Ui_Tools =
 			if (primary_p.className == "selected")
 			{
 				primary_p.className = "";
-				this.square_filling = 0;
+				this.circle_filling = 0;
 			}
 			else
 			{
 				primary_p.className = "selected";
 				secondary_p.className = "";
-				this.square_filling = 1;
+				this.circle_filling = 1;
 
 			}
 		}
@@ -231,13 +231,13 @@ var Ui_Tools =
 			if (secondary_p.className == "selected")
 			{
 				secondary_p.className = "";
-				this.square_filling = 0;
+				this.circle_filling = 0;
 			}
 			else
 			{
 				primary_p.className = "";
 				secondary_p.className = "selected";
-				this.square_filling = 1;
+				this.circle_filling = 2;
 
 			}
 		}

@@ -1,8 +1,26 @@
 var Tools =
 {
+	temp_canvas: undefined,
+	temp_ctx: undefined,
+
 	shape: false,
 	start_x: undefined,
 	start_y: undefined,
+
+	init: function()
+	{
+		this.temp_canvas = document.createElement("canvas");
+		this.temp_canvas.width = Storage.canvas_width;
+		this.temp_canvas.height = Storage.canvas_height;
+
+		this.temp_ctx = this.temp_canvas.getContext("2d");
+
+		this.temp_ctx['imageSmoothingEnabled'] = false;
+    	this.temp_ctx['mozImageSmoothingEnabled'] = false;
+    	this.temp_ctx['oImageSmoothingEnabled'] = false;
+    	this.temp_ctx['webkitImageSmoothingEnabled'] = false;
+    	this.temp_ctx['msImageSmoothingEnabled'] = false;
+	},
 
 	stop_shape: function()
 	{
@@ -147,37 +165,161 @@ var Tools =
 			this.start_y = y;
 			this.shape = true;
 		}
-		else
-		{
-			Canvas.clear_temp_layer();
-			var x1, x2, y1, y2;
-			x1 = this.start_x;
-			x2 = x;
-			y1 = this.start_y;
-			y2 = y;
-		}
 
-		var a = (y2 - y1) / (x2 - x1);
-		var b = y1 - a * x1;
-		while (x1 < x2)
-		{
-			var posy = parseInt(a * x1 + b);
-			if (x1 >= 0 && x1 < Canvas.temp_layer.length && posy >= 0 && posy < Canvas.temp_layer.length)
-			Canvas.add_pixel_to_temp_layer(x1, posy, color);
-			++x1;
-		}
+		Canvas.clear_temp_layer();
 
+		this.temp_ctx.beginPath();
+		this.temp_ctx.moveTo(this.start_x, this.start_y, 0.5);
+		this.temp_ctx.lineTo(x, y, 0.5);
+		this.temp_ctx.stroke();
+		this.temp_ctx.closePath();
+
+		var temp_data = this.temp_ctx.getImageData(0, 0, this.temp_canvas.width, this.temp_canvas.height);
+
+		for (x = 0; x < this.temp_canvas.width; ++x)
+		{
+			for (y = 0; y < this.temp_canvas.height; ++y)
+			{
+				var i = (x + (y * this.temp_canvas.width)) * 4;
+				if (temp_data.data[i + 3])
+				{
+					Canvas.add_pixel_to_temp_layer(x, y, color);
+				}
+			}
+		}
+		this.temp_ctx.clearRect(0, 0, this.temp_canvas.width, this.temp_canvas.height);
 		Canvas.add_layer_to_canvas();
 		Canvas.render_canvas();
 	},
 
-	square: function()
+	square: function(x, y, primary_color, secondary_color)
 	{
+		if (this.shape == false)
+		{
+			this.start_x = x;
+			this.start_y = y;
+			this.shape = true;
+		}
+		else
+		{
+			Canvas.clear_temp_layer();
+			var x1, x2, y1, y2;
+			if (this.start_x < x) {x1 = this.start_x; x2 = x;}
+			else {x1 = x; x2 = this.start_x;}
 
+			if (this.start_y < y) {y1 = this.start_y; y2 = y;}
+			else {y1 = y; y2 = this.start_y;}
+
+			if (Ui_Tools.square_filling == 0)
+			{
+				var tx1 = x1;
+				while (tx1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(tx1, y1, primary_color);
+					Canvas.add_pixel_to_temp_layer(tx1, y2, primary_color);
+					++tx1;
+				}
+				while (y1 <= y2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, y1, primary_color);
+					Canvas.add_pixel_to_temp_layer(x2, y1, primary_color);
+					++y1;
+				}
+			}
+			else if (Ui_Tools.square_filling == 1)
+			{
+				var ty1 = y1;
+				while (x1 < x2)
+				{
+					while (y1 < y2)
+					{
+						Canvas.add_pixel_to_temp_layer(x1, y1, primary_color);
+						++y1;
+					}
+					y1 = ty1;
+					++x1
+				}
+			}
+			else if (Ui_Tools.square_filling == 2)
+			{
+				var tx1 = x1;
+				var ty1 = y1;
+				while (tx1 <= x2)
+				{
+					Canvas.add_pixel_to_temp_layer(tx1, y1, primary_color);
+					Canvas.add_pixel_to_temp_layer(tx1, y2, primary_color);
+					++tx1;
+				}
+				while (ty1 <= y2)
+				{
+					Canvas.add_pixel_to_temp_layer(x1, ty1, primary_color);
+					Canvas.add_pixel_to_temp_layer(x2, ty1, primary_color);
+					++ty1;
+				}
+				++x1;
+				++y1;
+				ty1 = y1;
+				while (x1 < x2)
+				{
+					while (y1 < y2)
+					{
+						Canvas.add_pixel_to_temp_layer(x1, y1, secondary_color);
+						++y1;
+					}
+					y1 = ty1;
+					++x1
+				}
+			}
+
+			Canvas.add_layer_to_canvas();
+			Canvas.render_canvas();
+		}
 	},
 
-	circle: function()
+	circle: function(x, y, primary_color, secondary_color)
 	{
+		if (this.shape == false)
+		{
+			this.start_x = x;
+			this.start_y = y;
+			this.shape = true;
+		}
+		var d = Math.sqrt((x - this.start_x) * (x - this.start_x) + (y - this.start_y) * (y - this.start_y));
 
+		Canvas.clear_temp_layer();
+
+		this.temp_ctx.beginPath();
+		this.temp_ctx.arc(this.start_x, this.start_y, d, Math.PI * 2, false);
+		this.temp_ctx.lineWidth = Ui_Tools.circle_width;
+		this.temp_ctx.strokeStyle = "rgb(" + primary_color.r + ", " + primary_color.g + ", " + primary_color.b + ")";
+		if (Ui_Tools.circle_filling == 1)
+		{
+			this.temp_ctx.fillStyle = "rgb(" + primary_color.r + ", " + primary_color.g + ", " + primary_color.b + ")";
+			this.temp_ctx.fill();
+		}
+		else if (Ui_Tools.circle_filling == 2)
+		{
+			this.temp_ctx.fillStyle = "rgb(" + secondary_color.r + ", " + secondary_color.g + ", " + secondary_color.b + ")";
+			this.temp_ctx.fill();
+		}
+		this.temp_ctx.stroke();
+		this.temp_ctx.closePath();
+
+		var temp_data = this.temp_ctx.getImageData(0, 0, this.temp_canvas.width, this.temp_canvas.height);
+
+		for (x = 0; x < this.temp_canvas.width; ++x)
+		{
+			for (y = 0; y < this.temp_canvas.height; ++y)
+			{
+				var i = (x + (y * this.temp_canvas.width)) * 4;
+				if (temp_data.data[i + 3])
+				{
+					Canvas.add_pixel_to_temp_layer(x, y, {r: temp_data.data[i], g: temp_data.data[i + 1], b: temp_data.data[i + 2], a: 255});
+				}
+			}
+		}
+		this.temp_ctx.clearRect(0, 0, this.temp_canvas.width, this.temp_canvas.height);
+		Canvas.add_layer_to_canvas();
+		Canvas.render_canvas();
 	},
 }

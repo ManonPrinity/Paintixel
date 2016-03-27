@@ -4,8 +4,8 @@ var Ui_Canvas =
 	handler_width: undefined,
 	handler_height: undefined,
 	canvas: document.getElementById("main_canvas"),
-	canvas_width: 10,
-	canvas_height: 10,
+	canvas_width: 32,
+	canvas_height: 32,
 	canvas_current_width: undefined,
 	canvas_current_height: undefined,
 	canvas_zoomed_width: undefined,
@@ -18,7 +18,6 @@ var Ui_Canvas =
 		this.init_size();
 		this.init_position();
 		this.init_events();
-		this.log_sizes();
 	},
 
 	// Initialise les variables des tailles du handler, du canvas et des gaps

@@ -12,6 +12,16 @@ var height_range = document.getElementById("height_range");
 var join_room_section = document.getElementById("join_room_section");
 var create_room_section = document.getElementById("create_room_section");
 
+function init()
+{
+	localStorage.setItem("import_image", 0);
+	width_number.value = 32;
+	width_range.value = 32;
+	height_number.value = 32;
+	height_range.value = 32;
+	update_ui();
+}
+
 function update_ui()
 {
 	set_canvas_size();
@@ -90,13 +100,13 @@ function save_size()
 
 function join_room()
 {
-	fade_in(background_opacity, 0.9, 1);
-	fade_in(join_room_section, 1, 2);
+	fade_in(background_opacity, 0.9, 4);
+	fade_in(join_room_section, 1, 5);
 }
 
 function create_room()
 {
-	fade_in(background_opacity, 0.9, 1);
+	fade_in(background_opacity, 0.9, 4);
 }
 
 function hide_popups()
@@ -124,4 +134,33 @@ function fade_out(element, opacity, z)
 	{
 		element.style.zIndex = z;
 	}, 300);
+}
+
+function import_image(file)
+{
+	document.getElementById("filename_p").innerHTML = file.name;
+	document.getElementById("cancel_import_button").style.opacity = 0.8;
+	document.getElementById("import_button").style.width = "280px";
+
+	var img = new Image();
+	var image_url = URL.createObjectURL(file);
+	img.src = image_url;
+	img.onload = function()
+	{
+		width_number.value = img.width;
+		width_range.value = img.width;
+		height_number.value = img.height;
+		height_range.value = img.height;
+		draw_canvas_grid(parseInt(width_number.value), parseInt(height_number.value));
+		localStorage.setItem("import_image", 1);
+		localStorage.setItem("image_url", URL.createObjectURL(file));
+	}
+}
+
+function cancel_import()
+{
+	document.getElementById("filename_p").innerHTML = "Import image";
+	document.getElementById("cancel_import_button").style.opacity = 0;
+	document.getElementById("import_button").style.width = "320px";
+	localStorage.setItem("import_image", 0);
 }

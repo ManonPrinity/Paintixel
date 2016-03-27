@@ -11,31 +11,85 @@ var Canvas =
 	layer: undefined,
 	temp_layer: undefined,
 
-	shape: false,
-	start_x: undefined,
-	start_y: undefined,
-
 	left_click: false,
 	right_click: false,
 
 	init: function()
 	{
 		this.main_ctx = this.main_canvas.getContext("2d");
-		this.main_data = this.main_ctx.getImageData(0, 0, Ui_Canvas.canvas_current_width, Ui_Canvas.canvas_current_height);
-
 		this.preview_ctx = this.preview_canvas.getContext("2d");
-		this.preview_data = this.preview_ctx.getImageData(0, 0, Ui_Preview.canvas_width, Ui_Preview.canvas_height);
 
-		this.layer = [];
-		this.temp_layer = [];
-		for (var x = 0; x < Ui_Canvas.canvas_width; ++x)
+		if (Storage.import_image)
 		{
-			this.layer[x] = [];
-			this.temp_layer[x] = [];
-			for (var y = 0; y < Ui_Canvas.canvas_height; ++y)
+			var img = new Image();
+			img.src = Storage.image_url;
+			img.onload = function()
 			{
-				this.layer[x][y] = {r: 0, g: 0, b: 0, a: 0};
-				this.temp_layer[x][y] = {r: 0, g: 0, b: 0, a: 0};
+				console.log("Importing image...");
+				var posx = 0;
+				var posy = 0;
+
+				if (img.width < Ui_Canvas.canvas_width)
+					posx = parseInt((Ui_Canvas.canvas_width - img.width) / 2);
+				if (img.height < Ui_Canvas.canvas_height)
+					posy = parseInt((Ui_Canvas.canvas_height - img.height) / 2);
+
+				Canvas.main_ctx.drawImage(img, posx, posy);
+
+				Canvas.main_data = Canvas.main_ctx.getImageData(0, 0, Ui_Canvas.canvas_current_width, Ui_Canvas.canvas_current_height);
+				Canvas.preview_data = Canvas.preview_ctx.getImageData(0, 0, Ui_Preview.canvas_width, Ui_Preview.canvas_height);
+
+				Canvas.layer = [];
+				Canvas.temp_layer = [];
+				for (var x = 0; x < Ui_Canvas.canvas_width; ++x)
+				{
+					Canvas.layer[x] = [];
+					Canvas.temp_layer[x] = [];
+					for (var y = 0; y < Ui_Canvas.canvas_height; ++y)
+					{
+						var i = (x + (y * Ui_Canvas.canvas_width)) * 4;
+						Canvas.layer[x][y] = Canvas.temp_layer[x][y] =
+						{
+							r: Canvas.main_data.data[i],
+							g: Canvas.main_data.data[i + 1],
+							b: Canvas.main_data.data[i + 2],
+							a: Canvas.main_data.data[i + 3]
+						};
+					}
+				}
+			}
+		}
+		else
+		{
+			this.main_data = this.main_ctx.createImageData(Ui_Canvas.canvas_current_width, Ui_Canvas.canvas_current_height);
+			this.preview_data = this.preview_ctx.createImageData(Ui_Preview.canvas_width, Ui_Preview.canvas_height);
+
+			for (var i = 0; i < this.main_data.data.length; i += 4)
+			{
+				this.main_data.data[i + 0] = 0;
+				this.main_data.data[i + 1] = 0;
+				this.main_data.data[i + 2] = 0;
+				this.main_data.data[i + 3] = 0;
+			}
+			this.main_ctx.putImageData(this.main_data, 0, 0);
+
+			Canvas.layer = [];
+			Canvas.temp_layer = [];
+			for (var x = 0; x < Ui_Canvas.canvas_width; ++x)
+			{
+				Canvas.layer[x] = [];
+				Canvas.temp_layer[x] = [];
+				for (var y = 0; y < Ui_Canvas.canvas_height; ++y)
+				{
+					var i = (x + (y * Ui_Canvas.canvas_width)) * 4;
+					Canvas.layer[x][y] = Canvas.temp_layer[x][y] =
+					{
+						r: Canvas.main_data.data[i],
+						g: Canvas.main_data.data[i + 1],
+						b: Canvas.main_data.data[i + 2],
+						a: Canvas.main_data.data[i + 3]
+					};
+				}
 			}
 		}
 
@@ -48,6 +102,38 @@ var Canvas =
 		this.layer[x][y].g = color.g;
 		this.layer[x][y].b = color.b;
 		this.layer[x][y].a = color.a;
+
+		if (Ui_Tools.vertical_symetry && !Ui_Tools.horizontal_symetry)
+		{
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].r = color.r;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].g = color.g;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].b = color.b;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].a = color.a;
+		}
+		else if (!Ui_Tools.horizontal_symetry && Ui_Tools.vertical_symetry)
+		{
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].a = color.a;
+		}
+		else if (Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+		{
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].r = color.r;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].g = color.g;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].b = color.b;
+			this.layer[Ui_Canvas.canvas_width - x - 1][y].a = color.a;
+
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.layer[x][Ui_Canvas.canvas_height - y - 1].a = color.a;
+			
+			this.layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].a = color.a;
+		}
 	},
 
 	add_pixel_to_temp_layer: function(x, y, color)
@@ -58,6 +144,38 @@ var Canvas =
 		this.temp_layer[x][y].g = color.g;
 		this.temp_layer[x][y].b = color.b;
 		this.temp_layer[x][y].a = color.a;
+
+		if (Ui_Tools.vertical_symetry && !Ui_Tools.horizontal_symetry)
+		{
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].r = color.r;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].g = color.g;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].b = color.b;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].a = color.a;
+		}
+		else if (!Ui_Tools.horizontal_symetry && Ui_Tools.vertical_symetry)
+		{
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].a = color.a;
+		}
+		else if (Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+		{
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].r = color.r;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].g = color.g;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].b = color.b;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][y].a = color.a;
+
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.temp_layer[x][Ui_Canvas.canvas_height - y - 1].a = color.a;
+			
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].r = color.r;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].g = color.g;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].b = color.b;
+			this.temp_layer[Ui_Canvas.canvas_width - x - 1][Ui_Canvas.canvas_height - y - 1].a = color.a;
+		}
 	},
 
 	add_pixel_to_canvas: function(x, y, color)
@@ -79,6 +197,43 @@ var Canvas =
 				this.main_data.data[i + 1] = color.g;
 				this.main_data.data[i + 2] = color.b;
 				this.main_data.data[i + 3] = color.a;
+
+				if (Ui_Tools.vertical_symetry && !Ui_Tools.horizontal_symetry)
+				{
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
+				else if (!Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+				{
+					i = ((x + a) + ((Ui_Canvas.canvas_current_height - y - b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
+				else if (Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+				{
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+
+					i = ((x + a) + ((Ui_Canvas.canvas_current_height - y - b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+					
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((Ui_Canvas.canvas_current_height - y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
 			}
 		}
 	},
@@ -102,6 +257,43 @@ var Canvas =
 				this.main_data.data[i + 1] = color.g;
 				this.main_data.data[i + 2] = color.b;
 				this.main_data.data[i + 3] = color.a;
+
+				if (Ui_Tools.vertical_symetry && !Ui_Tools.horizontal_symetry)
+				{
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
+				else if (!Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+				{
+					i = ((x + a) + ((Ui_Canvas.canvas_current_height - y - b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
+				else if (Ui_Tools.vertical_symetry && Ui_Tools.horizontal_symetry)
+				{
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+
+					i = ((x + a) + ((Ui_Canvas.canvas_current_height - y - b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+					
+					i = ((Ui_Canvas.canvas_current_width - x - a) + ((Ui_Canvas.canvas_current_height - y + b) * Ui_Canvas.canvas_current_width)) * 4;
+					this.main_data.data[i] = color.r;
+					this.main_data.data[i + 1] = color.g;
+					this.main_data.data[i + 2] = color.b;
+					this.main_data.data[i + 3] = color.a;
+				}
 			}
 		}
 		this.main_ctx.putImageData(this.main_data, 0, 0);
@@ -149,23 +341,6 @@ var Canvas =
 					this.layer[x][y] = this.temp_layer[x][y];
 	},
 
-	bucket_recursive: function(x, y, color, selected_color)
-	{
-		if (this.layer[x][y].r == color.r && this.layer[x][y].g == color.g && this.layer[x][y].b == color.b && this.layer[x][y].a == color.a)
-		{
-			Canvas.add_pixel_to_layer(x, y, selected_color);
-			Canvas.render_pixel_to_canvas(x, y, selected_color);
-			if (x < Ui_Canvas.canvas_width - 1)
-				Canvas.bucket_recursive(x + 1, y, color, selected_color);
-			if (x > 0)
-				Canvas.bucket_recursive(x - 1, y, color, selected_color);
-			if (y < Ui_Canvas.canvas_height - 1)
-				Canvas.bucket_recursive(x, y + 1, color, selected_color);
-			if (y > 0)
-			Canvas.bucket_recursive(x, y - 1, color, selected_color);
-		}
-	},
-
 	handle_events: function()
 	{
 		this.main_canvas.addEventListener('mousemove', this.event_mousemove);
@@ -183,9 +358,9 @@ var Canvas =
 		Ui_Project_View.update_y(cursor_y);
 
 		if (this.left_click)
-			Canvas.layer_left_action(cursor_x, cursor_y);
+			Canvas.layer_action(cursor_x, cursor_y, 1);
 		else if (this.right_click)
-			Canvas.layer_right_action(cursor_x, cursor_y);
+			Canvas.layer_action(cursor_x, cursor_y, 2);
 	},
 
 	event_mousedown: function(e)
@@ -195,12 +370,12 @@ var Canvas =
 
 		if (e.which == 1)
 		{
-			Canvas.layer_left_action(cursor_x, cursor_y);
+			Canvas.layer_action(cursor_x, cursor_y, 1);
 			this.left_click = true;
 		}
 		else if (e.which == 3)
 		{
-			Canvas.layer_right_action(cursor_x, cursor_y);
+			Canvas.layer_action(cursor_x, cursor_y, 2);
 			this.right_click = true;
 		}
 	},
@@ -211,101 +386,144 @@ var Canvas =
 			this.left_click = false;
 		else if (e.which == 3)
 			this.right_click = false;
-		if (Canvas.shape == true)
-		{
-			Canvas.shape = false;
-			Canvas.copy_temp_layer();
-		}
+		Tools.stop_shape();
 	},
 
 	event_mouseout: function(e)
 	{
 		this.left_click = false;
 		this.right_click = false;
-		if (Canvas.shape == true)
-		{
-			Canvas.shape = false;
-			Canvas.copy_temp_layer();
-		}
+		Tools.stop_shape();
 	},
 
-	layer_left_action: function(x, y)
+	layer_action: function(x, y, click)
 	{
-		var color = {r: Ui_Palette.selected_colors_rgb[0], g: Ui_Palette.selected_colors_rgb[1], b: Ui_Palette.selected_colors_rgb[2], a: 255};
+		var primary_color;
+		var secondary_color;
+
+		if (click == 1)
+		{
+			primary_color = {r: Ui_Palette.selected_colors_rgb[0], g: Ui_Palette.selected_colors_rgb[1], b: Ui_Palette.selected_colors_rgb[2], a: 255};
+			secondary_color = {r: Ui_Palette.selected_colors_rgb[3], g: Ui_Palette.selected_colors_rgb[4], b: Ui_Palette.selected_colors_rgb[5], a: 255};
+		}
+		else if (click == 2)
+		{
+			primary_color = {r: Ui_Palette.selected_colors_rgb[3], g: Ui_Palette.selected_colors_rgb[4], b: Ui_Palette.selected_colors_rgb[5], a: 255};
+			secondary_color = {r: Ui_Palette.selected_colors_rgb[0], g: Ui_Palette.selected_colors_rgb[1], b: Ui_Palette.selected_colors_rgb[2], a: 255};
+		}
 
 		if (Ui_Tools.active_tool == "pen")
 		{
-			for (var a = 0; a < Ui_Tools.pen_size; ++a)
-			{
-				for (var b = 0; b < Ui_Tools.pen_size; ++b)
-				{
-					Canvas.add_pixel_to_layer(x + a, y + b, color);
-					Canvas.add_pixel_to_canvas(x + a, y + b, color);
-				}
-			}
-			Canvas.render_canvas();
+			Tools.pen(x, y, primary_color);
 		}
 		else if (Ui_Tools.active_tool == "pipette")
 		{
-			Ui_Palette.select_left_color(this.layer[x][y].r, this.layer[x][y].g, this.layer[x][y].b);
+			Tools.pipette(x, y);
 		}
 		else if (Ui_Tools.active_tool == "eraser")
 		{
-			for (var a = 0; a < Ui_Tools.eraser_size; ++a)
-			{
-				for (var b = 0; b < Ui_Tools.eraser_size; ++b)
-				{
-					Canvas.add_pixel_to_layer(x + a, y + b, {r: 0, g: 0, b: 0, a: 0});
-					Canvas.add_pixel_to_canvas(x + a, y + b, {r: 0, g: 0, b: 0, a: 0});
-				}
-			}
-			Canvas.render_canvas();
+			Tools.eraser(x, y);
 		}
 		else if (Ui_Tools.active_tool == "bucket")
 		{
-			Canvas.bucket_recursive(x, y, {r: Canvas.layer[x][y].r, g: Canvas.layer[x][y].g, b: Canvas.layer[x][y].b, a: Canvas.layer[x][y].a}, color);
+			var target_color = {r: Canvas.layer[x][y].r, g: Canvas.layer[x][y].g, b: Canvas.layer[x][y].b, a: Canvas.layer[x][y].a};
+			Tools.bucket(x, y, target_color, primary_color);
 			Canvas.render_canvas();
 		}
 		else if (Ui_Tools.active_tool == "swaper")
 		{
-			var clicked_color = {r: Canvas.layer[x][y].r, g: Canvas.layer[x][y].g, b: Canvas.layer[x][y].b, a: Canvas.layer[x][y].a};
-			for (var a = 0; a < Canvas.layer.length; ++a)
-			{
-				for (var b = 0; b < Canvas.layer[a].length; ++b)
-				{
-					if (Canvas.layer[a][b].r == clicked_color.r && Canvas.layer[a][b].g == clicked_color.g && Canvas.layer[a][b].b == clicked_color.b && Canvas.layer[a][b].a == clicked_color.a)
-					{
-						Canvas.add_pixel_to_layer(a, b, color);
-						Canvas.add_pixel_to_canvas(a, b, color);
-					}
-				}
-			}
-			Canvas.render_canvas();
+			var target_color = {r: Canvas.layer[x][y].r, g: Canvas.layer[x][y].g, b: Canvas.layer[x][y].b, a: Canvas.layer[x][y].a};
+			Tools.swaper(x, y, target_color, primary_color);
+		}
+		else if (Ui_Tools.active_tool == "lighten")
+		{
+			Tools.lighten(x, y);
+		}
+		else if (Ui_Tools.active_tool == "darken")
+		{
+			Tools.darken(x, y);
 		}
 		else if (Ui_Tools.active_tool == "stroke")
 		{
-			if (Canvas.shape == false)
+			Tools.stroke(x, y, primary_color);
+		}
+		else if (Ui_Tools.active_tool == "square")
+		{
+			if (Tools.shape == false)
 			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
+				Tools.start_x = x;
+				Tools.start_y = y;
+				Tools.shape = true;
 			}
 			else
 			{
 				Canvas.clear_temp_layer();
 				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
+				if (Tools.start_x < x) {x1 = Tools.start_x; x2 = x;}
+				else {x1 = x; x2 = Tools.start_x;}
 
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
+				if (Tools.start_y < y) {y1 = Tools.start_y; y2 = y;}
+				else {y1 = y; y2 = Tools.start_y;}
 
-				var a = (y2 - y1) / (x2 - x1);
-				var b = y1 - a * x1;
-				while (x1 <= x2)
+				if (Ui_Tools.square_filling == 0)
 				{
-					Canvas.add_pixel_to_temp_layer(x1, parseInt(a * x1 + b), color);
+					var tx1 = x1;
+					while (tx1 <= x2)
+					{
+						Canvas.add_pixel_to_temp_layer(tx1, y1, primary_color);
+						Canvas.add_pixel_to_temp_layer(tx1, y2, primary_color);
+						++tx1;
+					}
+					while (y1 <= y2)
+					{
+						Canvas.add_pixel_to_temp_layer(x1, y1, primary_color);
+						Canvas.add_pixel_to_temp_layer(x2, y1, primary_color);
+						++y1;
+					}
+				}
+				else if (Ui_Tools.square_filling == 1)
+				{
+					var ty1 = y1;
+					while (x1 < x2)
+					{
+						while (y1 < y2)
+						{
+							Canvas.add_pixel_to_temp_layer(x1, y1, primary_color);
+							++y1;
+						}
+						y1 = ty1;
+						++x1
+					}
+				}
+				else if (Ui_Tools.square_filling == 2)
+				{
+					var tx1 = x1;
+					var ty1 = y1;
+					while (tx1 <= x2)
+					{
+						Canvas.add_pixel_to_temp_layer(tx1, y1, primary_color);
+						Canvas.add_pixel_to_temp_layer(tx1, y2, primary_color);
+						++tx1;
+					}
+					while (ty1 <= y2)
+					{
+						Canvas.add_pixel_to_temp_layer(x1, ty1, primary_color);
+						Canvas.add_pixel_to_temp_layer(x2, ty1, primary_color);
+						++ty1;
+					}
 					++x1;
+					++y1;
+					ty1 = y1;
+					while (x1 < x2)
+					{
+						while (y1 < y2)
+						{
+							Canvas.add_pixel_to_temp_layer(x1, y1, secondary_color);
+							++y1;
+						}
+						y1 = ty1;
+						++x1
+					}
 				}
 
 				Canvas.add_layer_to_canvas();
@@ -314,21 +532,21 @@ var Canvas =
 		}
 		else if (Ui_Tools.active_tool == "circle")
 		{
-			if (Canvas.shape == false)
+			if (Tools.shape == false)
 			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
+				Tools.start_x = x;
+				Tools.start_y = y;
+				Tools.shape = true;
 			}
 			else
 			{
 				Canvas.clear_temp_layer();
 
 				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
+				if (Tools.start_x < x) {x1 = Tools.start_x; x2 = x;}
+				else {x1 = x; x2 = Tools.start_x;}
+				if (Tools.start_y < y) {y1 = Tools.start_y; y2 = y;}
+				else {y1 = y; y2 = Tools.start_y;}
 				var dx = x2 - x1;
 				var dy = y2 - y1;
 				var r = Math.floor(Math.sqrt((dx * dx) + (dy * dy)));
@@ -337,214 +555,18 @@ var Canvas =
 				var d = r - 1;
 				while (posy >= posx)
 				{
-					Canvas.add_pixel_to_temp_layer(x + posx, y + posy, color);
-					Canvas.add_pixel_to_temp_layer(x + posy, y + posx, color);
-					Canvas.add_pixel_to_temp_layer(x - posx, y + posy, color);
-					Canvas.add_pixel_to_temp_layer(x - posy, y + posx, color);
-					Canvas.add_pixel_to_temp_layer(x + posx, y - posy, color);
-					Canvas.add_pixel_to_temp_layer(x + posy, y - posx, color);
-					Canvas.add_pixel_to_temp_layer(x - posx, y - posy, color);
-					Canvas.add_pixel_to_temp_layer(x - posy, y - posx, color);
+					Canvas.add_pixel_to_temp_layer(x + posx, y + posy, primary_color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y + posx, primary_color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y + posy, primary_color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y + posx, primary_color);
+					Canvas.add_pixel_to_temp_layer(x + posx, y - posy, primary_color);
+					Canvas.add_pixel_to_temp_layer(x + posy, y - posx, primary_color);
+					Canvas.add_pixel_to_temp_layer(x - posx, y - posy, primary_color);
+					Canvas.add_pixel_to_temp_layer(x - posy, y - posx, primary_color);
 
 					if (d >= posx * 2) {d -= posx * 2 + 1; ++posx;}
 					else if (d < 2 * (r - posy)) {d += posy * 2 - 1; --posy;}
 					else {d += 2 * (posy - posx - 1); --posy; ++posx;}
-				}
-				Canvas.add_layer_to_canvas();
-				Canvas.render_canvas();
-			}
-		}
-		else if (Ui_Tools.active_tool == "square")
-		{
-			if (Canvas.shape == false)
-			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
-			}
-			else
-			{
-				Canvas.clear_temp_layer();
-				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
-
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
-
-				var tx1 = x1;
-				while (tx1 <= x2)
-				{
-					Canvas.add_pixel_to_temp_layer(tx1, y1, color);
-					Canvas.add_pixel_to_temp_layer(tx1, y2, color);
-					++tx1;
-				}
-				while (y1 <= y2)
-				{
-					Canvas.add_pixel_to_temp_layer(x1, y1, color);
-					Canvas.add_pixel_to_temp_layer(x2, y1, color);
-					++y1;
-				}
-				Canvas.add_layer_to_canvas();
-				Canvas.render_canvas();
-			}
-		}
-	},
-
-	layer_right_action: function(x, y)
-	{
-		var color = {r: Ui_Palette.selected_colors_rgb[3], g: Ui_Palette.selected_colors_rgb[4], b: Ui_Palette.selected_colors_rgb[5], a: 255};
-
-		if (Ui_Tools.active_tool == "pen")
-		{
-			for (var a = 0; a < Ui_Tools.pen_size; ++a)
-			{
-				for (var b = 0; b < Ui_Tools.pen_size; ++b)
-				{
-					Canvas.add_pixel_to_layer(x + a, y + b, color);
-					Canvas.add_pixel_to_canvas(x + a, y + b, color);
-				}
-			}
-			Canvas.render_canvas();
-		}
-		else if (Ui_Tools.active_tool == "pipette")
-		{
-			Ui_Palette.select_right_color(this.layer[x][y].r, this.layer[x][y].g, this.layer[x][y].b);
-		}
-		else if (Ui_Tools.active_tool == "eraser")
-		{
-			for (var a = 0; a < Ui_Tools.eraser_size; ++a)
-			{
-				for (var b = 0; b < Ui_Tools.eraser_size; ++b)
-				{
-					Canvas.add_pixel_to_layer(x + a, y + b, {r: 0, g: 0, b: 0, a: 0});
-					Canvas.add_pixel_to_canvas(x + a, y + b, {r: 0, g: 0, b: 0, a: 0});
-				}
-			}
-			Canvas.render_canvas();
-		}
-		else if (Ui_Tools.active_tool == "bucket")
-		{
-
-		}
-		else if (Ui_Tools.active_tool == "swaper")
-		{
-			var clicked_color = {r: Canvas.layer[x][y].r, g: Canvas.layer[x][y].g, b: Canvas.layer[x][y].b, a: Canvas.layer[x][y].a}
-			for (var a = 0; a < Canvas.layer.length; ++a)
-			{
-				for (var b = 0; b < Canvas.layer[a].length; ++b)
-				{
-					if (Canvas.layer[a][b].r == clicked_color.r && Canvas.layer[a][b].g == clicked_color.g && Canvas.layer[a][b].b == clicked_color.b && Canvas.layer[a][b].a == clicked_color.a)
-					{
-						Canvas.add_pixel_to_layer(a, b, color);
-						Canvas.add_pixel_to_canvas(a, b, color);
-					}
-				}
-			}
-			Canvas.render_canvas();
-		}
-		else if (Ui_Tools.active_tool == "stroke")
-		{
-			if (Canvas.shape == false)
-			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
-			}
-			else
-			{
-				Canvas.clear_temp_layer();
-				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
-
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
-
-				var a = (y2 - y1) / (x2 - x1);
-				var b = y1 - a * x1;
-				while (x1 <= x2)
-				{
-					Canvas.add_pixel_to_temp_layer(x1, parseInt(a * x1 + b), color);
-					++x1;
-				}
-
-				Canvas.add_layer_to_canvas();
-				Canvas.render_canvas();
-			}
-		}
-		else if (Ui_Tools.active_tool == "circle")
-		{
-			if (Canvas.shape == false)
-			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
-			}
-			else
-			{
-				Canvas.clear_temp_layer();
-
-				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
-				var dx = x2 - x1;
-				var dy = y2 - y1;
-				var r = Math.floor(Math.sqrt((dx * dx) + (dy * dy)));
-				var posx = 0;
-				var posy = r;
-				var d = r - 1;
-				while (posy >= posx)
-				{
-					Canvas.add_pixel_to_temp_layer(x + posx, y + posy, color);
-					Canvas.add_pixel_to_temp_layer(x + posy, y + posx, color);
-					Canvas.add_pixel_to_temp_layer(x - posx, y + posy, color);
-					Canvas.add_pixel_to_temp_layer(x - posy, y + posx, color);
-					Canvas.add_pixel_to_temp_layer(x + posx, y - posy, color);
-					Canvas.add_pixel_to_temp_layer(x + posy, y - posx, color);
-					Canvas.add_pixel_to_temp_layer(x - posx, y - posy, color);
-					Canvas.add_pixel_to_temp_layer(x - posy, y - posx, color);
-
-					if (d >= posx * 2) {d -= posx * 2 + 1; ++posx;}
-					else if (d < 2 * (r - posy)) {d += posy * 2 - 1; --posy;}
-					else {d += 2 * (posy - posx - 1); --posy; ++posx;}
-				}
-				Canvas.add_layer_to_canvas();
-				Canvas.render_canvas();
-			}
-		}
-		else if (Ui_Tools.active_tool == "square")
-		{
-			if (Canvas.shape == false)
-			{
-				Canvas.start_x = x;
-				Canvas.start_y = y;
-				Canvas.shape = true;
-			}
-			else
-			{
-				Canvas.clear_temp_layer();
-				var x1, x2, y1, y2;
-				if (Canvas.start_x < x) {x1 = Canvas.start_x; x2 = x;}
-				else {x1 = x; x2 = Canvas.start_x;}
-
-				if (Canvas.start_y < y) {y1 = Canvas.start_y; y2 = y;}
-				else {y1 = y; y2 = Canvas.start_y;}
-
-				var tx1 = x1;
-				while (tx1 <= x2)
-				{
-					Canvas.add_pixel_to_temp_layer(tx1, y1, color);
-					Canvas.add_pixel_to_temp_layer(tx1, y2, color);
-					++tx1;
-				}
-				while (y1 <= y2)
-				{
-					Canvas.add_pixel_to_temp_layer(x1, y1, color);
-					Canvas.add_pixel_to_temp_layer(x2, y1, color);
-					++y1;
 				}
 				Canvas.add_layer_to_canvas();
 				Canvas.render_canvas();

@@ -62,7 +62,6 @@ var Ui_Project_View =
 		Ui_Canvas.update_size();
 		Ui_Canvas.update_position();
 		Canvas.add_layer_to_canvas();
-		Ui_Canvas.log_sizes();
 	},
 
 	update_grid_checkbox: function(check)

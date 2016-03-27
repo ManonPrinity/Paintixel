@@ -40,11 +40,19 @@ body { height: 100%; font-family: Roboto-Regular, verdana; background: #222; fon
 		#tools_section .tool_handler img { display: block; width: 64%; margin: 18%;}
 		#tools_section .tool_handler:hover span { display: block; position: absolute; bottom: 0px; right: 0px; width: 16px; height: 16px; line-height: 16px; font-size: 12px; background: #fff; box-shadow: 0px 0px 2px #777; text-align: center;}
 	#tools_section .tool { display: none; padding-bottom: 8px;}
-		#tools_section .tool p { display: inline-block; vertical-align: top; width: 128px; height: 32px; line-height: 32px; margin: 0px; margin-left: 16px; font-size: 14px;}
-		#tools_section .tool span { display: inline-block; vertical-align: top; height: 32px; line-height: 32px; font-size: 14px;}
-		#tools_section .tool input { display: block; width: 84%; margin: 0% 8%; padding: 0px;}
+		#tools_section .tool > p { display: inline-block; vertical-align: top; width: 128px; height: 32px; line-height: 32px; margin: 0px; margin-left: 16px; font-size: 14px;}
+		#tools_section .tool > span { display: inline-block; vertical-align: top; height: 32px; line-height: 32px; font-size: 14px;}
+		#tools_section .tool > input { display: block; width: 84%; margin: 0% 8%; padding: 0px;}
+		#tools_section .tool > div { display: block; width: 84%; margin: 0% 8%; padding-top: 8px;}
+			#tools_section .tool > div p { display: inline-block; vertical-align: top; box-sizing: border-box; width: calc(50% - 8px); height: 80px; margin: 0; padding: 8px; border: 1px solid #aaa; font-size: 14px; text-align: center; cursor: pointer;}
+			#tools_section .tool > div p.selected { border: none; background: #ddd; box-shadow: 0px 0px 2px #777 inset;}
+			#tools_section .tool > div p:nth-child(1) { margin-right: 8px;}
+			#tools_section .tool > div p:nth-child(2) { margin-left: 8px;}
 		#tools_section .tool .legend { width: auto; height: auto; line-height: 16px; margin: 0px 16px; font-size: 12px; color: #777; font-style: italic;}
 	#tool_option_pen { display: block}
+	#tools_section .symetry_div { display: block; width: 84%; padding: 2% 8%; border-top: 1px solid #aaa;}
+		#tools_section .symetry_div p { display: inline-block; vertical-align: top; width: 150px; height: 32px; line-height: 32px; font-size: 14px;}
+		#tools_section .symetry_div input { display: inline-block; vertical-align: top; height: 32px; line-height: 32px; }
 
 #palettes_section {}
 	#palettes_section .colors { box-shadow: 1px 0px 1px 1px #000 inset; background-image: url("../img/canvas_bg.png"); cursor: pointer;}

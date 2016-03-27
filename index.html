@@ -8,7 +8,7 @@
 		<link rel="icon" type="img/png" href="img/favicon.png"/>
 	</head>
  
-	<body onload="update_ui()" onresize="update_ui()">
+	<body onload="init()" onresize="update_ui()">
 		<canvas id="background_canvas"></canvas>
 		<div id="background_opacity" onclick="hide_popups()"></div>
 		<header id="main_header">
@@ -21,6 +21,10 @@
 			<input id="width_range" oninput="update_size(2)" type="range" min="10" max="500" value="10"/>
 			<input id="height_number" oninput="update_height(1)" type="number" value="10"/>
 			<input id="height_range" oninput="update_height(2)" type="range" min="10" max="500" value="10"/>
+			<div class="file_input_div">
+				<p id="filename_p">Import image</p>
+				<span id="cancel_import_button" onclick="cancel_import()"></span>
+				<input id="import_button" type="file" accept="image/*" onchange="import_image(this.files[0])"/></div>
 			<a onclick="save_size()" href="editor.html">Start Editing !</a>
 			<input id="join_button" type="button" value="Join a room" onclick="join_room()"/>
 			<input id="create_button" type="button" value="Create a room" onclick="create_room()"/>

@@ -94,12 +94,24 @@
 					<input oninput="Ui_Tools.update_square_width(this.value)" type="range" min="1" max="8" value="1"/>
 					<p>Square opacity : </p><span id="square_opacity_span">100%</span>
 					<input oninput="Ui_Tools.update_square_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+					<div>
+						<p id="fill_square_primary" onclick="Ui_Tools.update_square_filling(1);">Fill square with the same color</p>
+						<p id="fill_square_secondary" onclick="Ui_Tools.update_square_filling(2);">Fill square with the other color</p>
+					</div>
 				</div>
 				<div class="tool" id="tool_option_circle">
 					<p>Circle width : </p><span id="circle_width_span">1 pixel</span>
 					<input oninput="Ui_Tools.update_circle_width(this.value)" type="range" min="1" max="8" value="1"/>
 					<p>Circle opacity : </p><span id="circle_opacity_span">100%</span>
 					<input oninput="Ui_Tools.update_circle_opacity(this.value)" type="range" min="0" max="100" value="100"/>
+					<div>
+						<p id="fill_circle_primary" onclick="Ui_Tools.update_circle_filling(1);">Fill circle with the same color</p>
+						<p id="fill_circle_secondary" onclick="Ui_Tools.update_circle_filling(2);">Fill circle with the other color</p>
+					</div>
+				</div>
+				<div class="symetry_div">
+					<p>Vertical symetry : </p><input type="checkbox" id="vertical_symetry_input" onclick="Ui_Tools.update_vertical_symetry(this.checked)"/>
+					<p>Horizontal symetry : </p><input type="checkbox" id="horizontal_symetry_input" onclick="Ui_Tools.update_horizontal_symetry(this.checked)"/>
 				</div>
 			</section>
 			<section id="palettes_section">
@@ -166,5 +178,6 @@
 		<script type="text/javascript" src="scripts/ui_canvas.js"></script>
 		<script type="text/javascript" src="scripts/ui.js"></script>
 		<script type="text/javascript" src="scripts/canvas.js"></script>
+		<script type="text/javascript" src="scripts/tools.js"></script>
 	</body>
 </html>

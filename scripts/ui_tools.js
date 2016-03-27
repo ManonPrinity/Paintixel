@@ -16,12 +16,19 @@ var Ui_Tools =
 	stroke_opacity: 100,
 	square_width: 1,
 	square_opacity: 100,
+	square_filling: 0,
 	circle_width: 1,
 	circle_opacity: 100,
+	circle_filling: 0,
+
+	vertical_symetry: false,
+	horizontal_symetry: false,
 
 	init: function()
 	{
 		this.show_tool_option();
+		document.getElementById("vertical_symetry_input").checked = false;
+		document.getElementById("horizontal_symetry_input").checked = false;
 	},
 
 	select_tool: function(elem, tool)
@@ -148,6 +155,43 @@ var Ui_Tools =
 		this.square_opacity = parseInt(opacity);
 	},
 
+	update_square_filling: function(filling)
+	{
+		var primary_p = document.getElementById("fill_square_primary");
+		var secondary_p = document.getElementById("fill_square_secondary");
+
+		if (filling == 1)
+		{
+			if (primary_p.className == "selected")
+			{
+				primary_p.className = "";
+				this.square_filling = 0;
+			}
+			else
+			{
+				primary_p.className = "selected";
+				secondary_p.className = "";
+				this.square_filling = 1;
+
+			}
+		}
+		else if (filling == 2)
+		{
+			if (secondary_p.className == "selected")
+			{
+				secondary_p.className = "";
+				this.square_filling = 0;
+			}
+			else
+			{
+				primary_p.className = "";
+				secondary_p.className = "selected";
+				this.square_filling = 2;
+
+			}
+		}
+	},
+
 	update_circle_width: function(width)
 	{
 		document.getElementById("circle_width_span").innerHTML = width + " pixel";
@@ -160,5 +204,54 @@ var Ui_Tools =
 	{
 		document.getElementById("circle_opacity_span").innerHTML = opacity + "%";
 		this.circle_opacity = parseInt(opacity);
+	},
+
+	update_circle_filling: function(filling)
+	{
+		var primary_p = document.getElementById("fill_circle_primary");
+		var secondary_p = document.getElementById("fill_circle_secondary");
+
+		if (filling == 1)
+		{
+			if (primary_p.className == "selected")
+			{
+				primary_p.className = "";
+				this.square_filling = 0;
+			}
+			else
+			{
+				primary_p.className = "selected";
+				secondary_p.className = "";
+				this.square_filling = 1;
+
+			}
+		}
+		else if (filling == 2)
+		{
+			if (secondary_p.className == "selected")
+			{
+				secondary_p.className = "";
+				this.square_filling = 0;
+			}
+			else
+			{
+				primary_p.className = "";
+				secondary_p.className = "selected";
+				this.square_filling = 1;
+
+			}
+		}
+	},
+
+	update_vertical_symetry: function(check)
+	{
+		document.getElementById("vertical_symetry_input").checked = check;
+		this.vertical_symetry = check;
+	},
+
+	update_horizontal_symetry: function(check)
+	{
+		document.getElementById("horizontal_symetry_input").checked = check;
+		this.horizontal_symetry = check;
 	}
 }

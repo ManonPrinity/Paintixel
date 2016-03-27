@@ -21,9 +21,13 @@ body { height: 100%; font-family: Roboto-Regular, verdana; background: #fafafa; 
 #main_div { display: block; max-width: 1024px; margin: 64px auto 0px auto;}
 	#main_div input[type=number] { display: block; width: 100px; height: 40px; margin: auto; border: none; background: none; font-size: 24px; color: #333; font-family: Roboto-Regular; text-align: center;}
 	#main_div input[type=range] { display: block; width: 300px; margin: 8px auto 32px auto;}
-	#main_div a { display: block; width: 320px; height: 60px; line-height: 60px; margin: 52px auto 0px auto; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 24px; text-decoration: none; text-shadow: 0px 0px 2px #000;}
-	#main_div a:active { margin-top: 54px; border-bottom: 3px solid #32785f;}
+	#main_div a { display: block; width: 320px; height: 60px; line-height: 60px; margin: 16px auto 0px auto; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 24px; text-decoration: none; text-shadow: 0px 0px 2px #000;}
+	#main_div a:active { margin-top: 18px; border-bottom: 3px solid #32785f;}
 	#main_div input[type=button] { display: inline-block; vertical-align: top; width: 152px; height: 40px; margin-top: 16px; border: none; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 16px; font-family: Roboto-Regular; text-shadow: 0px 0px 2px #000; cursor: pointer;}
+	#main_div .file_input_div { display: block; position: relative; width: 320px; height: 40px; line-height: 40px; margin: auto; border: none; border-bottom: 5px solid #32785f; background: #43a381; color: #fff; font-size: 16px; font-family: Roboto-Regular; text-shadow: 0px 0px 2px #000; cursor: pointer;}
+		#main_div .file_input_div p { display: block; position: absolute; top: 0; left: 0; z-index: 1; width: 320px; height: 40px; color: #fff; font-size: 16px; text-shadow: 0px 0px 2px #000;}
+		#main_div .file_input_div span { display: block; position: absolute; top: 0; right: 0; z-index: 2; box-sizing: border-box; width: 40px; height: 40px; border-left: 1px solid #32785f; background-image: url("../img/icons/cross.svg"); background-size: 16px 16px; background-repeat: no-repeat; background-position: 50% 50%; opacity: 0; transition: opacity 300ms ease;}
+		#main_div .file_input_div input[type=file] { display: block; position: absolute; top: 0; left: 0; z-index: 3; width: 320px; height: 40px; cursor: pointer; opacity: 0;}
 	#join_button { margin-right: 16px;}
 
 #join_room_section { display: block; position: absolute; z-index: -1; top: 0; width: 512px; height: 700px; background: #fafafa; box-shadow: 0px 0px 4px #000; overflow: hidden; opacity: 0; transition: opacity 300ms ease;}
